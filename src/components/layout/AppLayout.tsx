@@ -1,6 +1,5 @@
 "use client"
 import type React from "react"
-import { Box } from "@mui/material"
 import { usePathname } from "next/navigation"
 import Sidebar from "./Sidebar"
 
@@ -15,22 +14,15 @@ export default function AppLayout({ children }: AppLayoutProps) {
   const isPublicRoute = publicRoutes.includes(pathname)
 
   if (isPublicRoute) {
-    return <>{children}</>
+    return <div className="w-full">{children}</div>
   }
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <div className="flex">
       <Sidebar />
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          bgcolor: "background.default",
-          minHeight: "100vh",
-        }}
-      >
+      <main className="flex-1 bg-background min-h-screen">
         {children}
-      </Box>
-    </Box>
+      </main>
+    </div>
   )
 }
