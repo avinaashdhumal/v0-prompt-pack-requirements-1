@@ -6,127 +6,76 @@ export const theme = createTheme({
   palette: {
     mode: "light",
     primary: {
-      main: "#4338ca", // Indigo-600 matching the design inspiration
-      light: "#6366f1",
-      dark: "#3730a3",
-      contrastText: "#ffffff",
+      main: "#212121",
+      contrastText: "#fafafa",
     },
     secondary: {
-      main: "#059669", // Emerald-600 for accent color
-      light: "#10b981",
-      dark: "#047857",
-      contrastText: "#ffffff",
+      main: "#f5f5f5",
+      contrastText: "#212121",
     },
     background: {
-      default: "#fafafa",
+      default: "#ffffff",
       paper: "#ffffff",
     },
     text: {
-      primary: "#1f2937",
-      secondary: "#6b7280",
+      primary: "#212121",
+      secondary: "#757575",
     },
     error: {
       main: "#dc2626",
-      light: "#ef4444",
-      dark: "#b91c1c",
-    },
-    warning: {
-      main: "#d97706",
-      light: "#f59e0b",
-      dark: "#b45309",
     },
     success: {
-      main: "#059669",
-      light: "#10b981",
-      dark: "#047857",
+      main: "#16a34a",
     },
-    grey: {
-      50: "#f9fafb",
-      100: "#f3f4f6",
-      200: "#e5e7eb",
-      300: "#d1d5db",
-      400: "#9ca3af",
-      500: "#6b7280",
-      600: "#4b5563",
-      700: "#374151",
-      800: "#1f2937",
-      900: "#111827",
-    },
+    divider: "#e5e5e5",
   },
   typography: {
-    fontFamily: "var(--font-geist-sans)",
+    fontFamily: "var(--font-geist-sans), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
     h1: {
-      fontSize: "2.25rem",
+      fontSize: "3.5rem",
       fontWeight: 700,
       lineHeight: 1.2,
+      "@media (max-width:600px)": {
+        fontSize: "2.5rem",
+      },
     },
     h2: {
-      fontSize: "1.875rem",
-      fontWeight: 600,
+      fontSize: "2.5rem",
+      fontWeight: 700,
       lineHeight: 1.3,
+      "@media (max-width:600px)": {
+        fontSize: "2rem",
+      },
     },
     h3: {
-      fontSize: "1.5rem",
-      fontWeight: 600,
-      lineHeight: 1.4,
-    },
-    h4: {
-      fontSize: "1.25rem",
-      fontWeight: 600,
-      lineHeight: 1.4,
-    },
-    h5: {
-      fontSize: "1.125rem",
-      fontWeight: 600,
-      lineHeight: 1.4,
-    },
-    h6: {
-      fontSize: "1rem",
-      fontWeight: 600,
+      fontSize: "1.75rem",
+      fontWeight: 700,
       lineHeight: 1.4,
     },
     body1: {
       fontSize: "1rem",
       lineHeight: 1.6,
     },
-    body2: {
-      fontSize: "0.875rem",
-      lineHeight: 1.6,
-    },
   },
   shape: {
-    borderRadius: 8,
+    borderRadius: 12,
   },
   components: {
     MuiButton: {
       styleOverrides: {
         root: {
           textTransform: "none",
-          fontWeight: 500,
-          borderRadius: 8,
-          padding: "8px 16px",
-        },
-        contained: {
-          boxShadow: "none",
-          "&:hover": {
-            boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-          },
+          fontWeight: 600,
+          borderRadius: 12,
+          padding: "12px 24px",
         },
       },
     },
     MuiCard: {
       styleOverrides: {
         root: {
-          boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
-          borderRadius: 12,
-          border: "1px solid #e5e7eb",
-        },
-      },
-    },
-    MuiPaper: {
-      styleOverrides: {
-        root: {
-          backgroundImage: "none",
+          borderRadius: 16,
+          boxShadow: "0 1px 3px rgba(0,0,0,0.05)",
         },
       },
     },

@@ -2,6 +2,7 @@
 import type React from "react"
 import { usePathname } from "next/navigation"
 import Sidebar from "./Sidebar"
+import { Box } from "@mui/material"
 
 const publicRoutes = ["/", "/login", "/register"]
 
@@ -14,15 +15,15 @@ export default function AppLayout({ children }: AppLayoutProps) {
   const isPublicRoute = publicRoutes.includes(pathname)
 
   if (isPublicRoute) {
-    return <div className="w-full">{children}</div>
+    return <Box sx={{ width: "100%" }}>{children}</Box>
   }
 
   return (
-    <div className="flex">
+    <Box sx={{ display: "flex" }}>
       <Sidebar />
-      <main className="flex-1 bg-background min-h-screen">
+      <Box component="main" sx={{ flexGrow: 1, bgcolor: "background.default", minHeight: "100vh" }}>
         {children}
-      </main>
-    </div>
+      </Box>
+    </Box>
   )
 }
