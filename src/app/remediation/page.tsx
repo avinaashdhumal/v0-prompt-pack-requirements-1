@@ -261,7 +261,7 @@ export default function RemediationPage() {
         </motion.div>
 
         {/* Statistics */}
-        <Grid container spacing={3} sx={{ mb: 4 }}>
+        <Grid container spacing={3} sx={{ mb: 4, width: "100%" }}>
           {statCards.map((stat, index) => (
             <Grid item xs={12} sm={6} md={3} key={stat.title}>
               <motion.div
@@ -286,8 +286,8 @@ export default function RemediationPage() {
                   }}
                 >
                   <CardContent sx={{ p: 3, height: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-                    <Box display="flex" alignItems="flex-start" justifyContent="space-between">
-                      <Box sx={{ flex: 1 }}>
+                    <Box display="flex" alignItems="flex-start" justifyContent="space-between" sx={{ gap: 2 }}>
+                      <Box sx={{ flex: 1, minWidth: 0 }}>
                         <Typography color="textSecondary" variant="body2" sx={{ fontWeight: 500, mb: 1.5 }}>
                           {stat.title}
                         </Typography>
@@ -302,6 +302,7 @@ export default function RemediationPage() {
                           bgcolor: stat.bgColor,
                           display: "inline-flex",
                           flexShrink: 0,
+                          ml: 2,
                         }}
                       >
                         <stat.icon style={{ color: stat.color }} />

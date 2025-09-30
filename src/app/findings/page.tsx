@@ -322,7 +322,7 @@ export default function FindingsPage() {
         </motion.div>
 
         {/* Statistics Cards */}
-        <Grid container spacing={3} sx={{ mb: 4 }}>
+        <Grid container spacing={3} sx={{ mb: 4, width: "100%" }}>
           {statCards.map((stat, index) => (
             <Grid item xs={12} sm={6} md={3} key={stat.label}>
               <motion.div
@@ -347,8 +347,8 @@ export default function FindingsPage() {
                   }}
                 >
                   <CardContent sx={{ p: 3, height: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-                    <Box sx={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between" }}>
-                      <Box sx={{ flex: 1 }}>
+                    <Box sx={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 2 }}>
+                      <Box sx={{ flex: 1, minWidth: 0 }}>
                         <Typography color="text.secondary" variant="body2" sx={{ fontWeight: 500, mb: 1.5 }}>
                           {stat.label}
                         </Typography>
@@ -363,6 +363,7 @@ export default function FindingsPage() {
                           bgcolor: stat.bgColor,
                           display: "inline-flex",
                           flexShrink: 0,
+                          ml: 2,
                         }}
                       >
                         <stat.icon style={{ color: stat.color }} />

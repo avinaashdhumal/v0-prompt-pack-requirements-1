@@ -116,8 +116,8 @@ export function DashboardContent() {
         },
       }}>
         <CardContent sx={{ p: 3, height: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-          <Box sx={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", mb: 2 }}>
-            <Box sx={{ flex: 1 }}>
+          <Box sx={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 2 }}>
+            <Box sx={{ flex: 1, minWidth: 0 }}>
               <Typography color="text.secondary" variant="body2" sx={{ fontWeight: 500, mb: 1.5 }}>
                 {title}
               </Typography>
@@ -132,6 +132,7 @@ export function DashboardContent() {
               color: "white",
               display: "inline-flex",
               flexShrink: 0,
+              ml: 2,
             }}>
               <Icon size={24} />
             </Box>
