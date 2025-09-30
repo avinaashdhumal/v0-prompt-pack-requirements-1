@@ -169,7 +169,7 @@ export function PackBuilder({ existingPack, existingPrompts = [] }: PackBuilderP
       if (isEditing) {
         router.push(`/packs/${existingPack.id}`)
       } else {
-        router.push("/dashboard")
+        router.push("/packs")
       }
     } catch (error) {
       console.error("Failed to save pack:", error)

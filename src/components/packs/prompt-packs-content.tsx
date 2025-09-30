@@ -60,7 +60,9 @@ export function PromptPacksContent() {
   const [menuAnchor, setMenuAnchor] = useState<{ [key: string]: HTMLElement | null }>({})
 
   useEffect(() => {
-    const userPacksData = mockPromptPacks.filter((pack) => pack.authorId === user?.id)
+    // For now, use the first user from mock data (you can update this when real auth is integrated)
+    const currentUserId = user?.id || "1"
+    const userPacksData = mockPromptPacks.filter((pack) => pack.authorId === currentUserId)
     const featuredPacksData = mockPromptPacks.filter((pack) => pack.isFeatured).slice(0, 6)
 
     setUserPacks(userPacksData)
