@@ -13,7 +13,7 @@ import {
   Avatar,
   Button,
 } from "@mui/material"
-import { Dashboard, Description, Assessment, FindInPage, Build, People, Settings, Logout } from "@mui/icons-material"
+import { Dashboard, Description, Assessment, FindInPage, Build, People, Settings, Logout, AutoAwesome } from "@mui/icons-material"
 import { useRouter, usePathname } from "next/navigation"
 import { useAuth } from "@/lib/hooks/useAuth"
 
@@ -21,6 +21,7 @@ const drawerWidth = 240
 
 const menuItems = [
   { text: "Dashboard", icon: Dashboard, path: "/dashboard" },
+  { text: "AI Prompt Packs", icon: AutoAwesome, path: "/packs" },
   { text: "Documents", icon: Description, path: "/documents" },
   { text: "Assessments", icon: Assessment, path: "/assessments" },
   { text: "Findings", icon: FindInPage, path: "/findings" },

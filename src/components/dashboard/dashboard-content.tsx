@@ -1,8 +1,5 @@
 "use client"
 
-import type React from "react"
-
-import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import {
   Box,
@@ -10,259 +7,230 @@ import {
   Card,
   CardContent,
   Typography,
-  Button,
+  LinearProgress,
   Chip,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
   Avatar,
   IconButton,
-  Menu,
-  MenuItem,
-  Divider,
+  Tooltip,
+  Container,
 } from "@mui/material"
 import {
   TrendingUp,
-  Download,
-  Heart,
-  Star,
-  BookOpen,
-  Plus,
-  MoreVertical as MoreVert,
-  Eye,
-  Share,
-  Edit,
+  TrendingDown,
+  Activity,
+  Shield,
+  AlertTriangle,
+  CheckCircle,
+  Clock,
+  MoreVertical,
   Sparkles,
 } from "lucide-react"
-import Link from "next/link"
-import { useAuth } from "@/hooks/use-auth"
-import { mockPromptPacks } from "@/lib/mock-data"
-import type { PromptPack } from "@/lib/types"
+import ScoringEngine from "@/components/scoring/ScoringEngine"
 
-interface DashboardStats {
-  totalPacks: number
-  totalDownloads: number
-  totalLikes: number
-  totalViews: number
-  packGrowth: number
-  downloadGrowth: number
+// Mock data for dashboard
+const mockDashboardData = {
+  overallScore: 78,
+  scoreChange: 5,
+  totalAssessments: 12,
+  activeFindings: 34,
+  resolvedFindings: 156,
+  highRiskItems: 8,
+  complianceFrameworks: [
+    { name: "PCI DSS", score: 85, trend: "up", color: "#10B981" },
+    { name: "ISO 27001", score: 72, trend: "up", color: "#3B82F6" },
+    { name: "SOX", score: 90, trend: "stable", color: "#10B981" },
+    { name: "GDPR", score: 68, trend: "down", color: "#F59E0B" },
+  ],
+  recentAssessments: [
+    {
+      id: "1",
+      name: "Q4 PCI DSS Review",
+      framework: "PCI DSS",
+      score: 85,
+      status: "completed",
+      date: "2024-01-15",
+      findings: 12,
+    },
+    {
+      id: "2",
+      name: "ISO 27001 Annual",
+      framework: "ISO 27001",
+      score: 72,
+      status: "in-progress",
+      date: "2024-01-10",
+      findings: 18,
+    },
+    {
+      id: "3",
+      name: "SOX Controls Testing",
+      framework: "SOX",
+      score: 90,
+      status: "completed",
+      date: "2024-01-08",
+      findings: 5,
+    },
+  ],
+  riskDistribution: {
+    critical: 3,
+    high: 8,
+    medium: 15,
+    low: 8,
+  },
 }
 
-export function DashboardContent() {
-  const { user } = useAuth()
-  const [stats, setStats] = useState<DashboardStats>({
-    totalPacks: 0,
-    totalDownloads: 0,
-    totalLikes: 0,
-    totalViews: 0,
-    packGrowth: 0,
-    downloadGrowth: 0,
-  })
-  const [userPacks, setUserPacks] = useState<PromptPack[]>([])
-  const [featuredPacks, setFeaturedPacks] = useState<PromptPack[]>([])
-  const [menuAnchor, setMenuAnchor] = useState<{ [key: string]: HTMLElement | null }>({})
+const mockScoringData = {
+  breakdown: [
+    { category: "Access Controls", score: 85, weight: 25, trend: "up" as const, findings: 8 },
+    { category: "Data Protection", score: 72, weight: 20, trend: "stable" as const, findings: 12 },
+    { category: "Network Security", score: 90, weight: 20, trend: "up" as const, findings: 5 },
+    { category: "Incident Response", score: 68, weight: 15, trend: "down" as const, findings: 9 },
+    { category: "Risk Management", score: 75, weight: 20, trend: "up" as const, findings: 6 },
+  ],
+  riskFactors: [
+    { name: "Privileged Access Management", impact: "high" as const, likelihood: "medium" as const, score: 65 },
+    { name: "Data Encryption at Rest", impact: "high" as const, likelihood: "low" as const, score: 85 },
+    { name: "Third-Party Risk Assessment", impact: "medium" as const, likelihood: "high" as const, score: 55 },
+    { name: "Business Continuity Planning", impact: "medium" as const, likelihood: "medium" as const, score: 70 },
+  ],
+}
 
-  useEffect(() => {
-    // Mock data loading - in real app, fetch from API
-    const userPacksData = mockPromptPacks.filter((pack) => pack.authorId === user?.id)
-    const featuredPacksData = mockPromptPacks.filter((pack) => pack.isFeatured).slice(0, 6)
-
-    setUserPacks(userPacksData)
-    setFeaturedPacks(featuredPacksData)
-
-    // Calculate stats
-    const totalDownloads = userPacksData.reduce((sum, pack) => sum + pack.downloadCount, 0)
-    const totalLikes = userPacksData.reduce((sum, pack) => sum + pack.likeCount, 0)
-    const totalViews = userPacksData.reduce((sum, pack) => sum + pack.viewCount, 0)
-
-    setStats({
-      totalPacks: userPacksData.length,
-      totalDownloads,
-      totalLikes,
-      totalViews,
-      packGrowth: 12, // Mock growth percentage
-      downloadGrowth: 23, // Mock growth percentage
-    })
-  }, [user?.id])
-
-  const handleMenuClick = (packId: string, event: React.MouseEvent<HTMLElement>) => {
-    setMenuAnchor((prev) => ({ ...prev, [packId]: event.currentTarget }))
-  }
-
-  const handleMenuClose = (packId: string) => {
-    setMenuAnchor((prev) => ({ ...prev, [packId]: null }))
-  }
-
-  const fadeInUp = {
-    initial: { opacity: 0, y: 20 },
-    animate: { opacity: 1, y: 0 },
-  }
-
-  const StatCard = ({ title, value, change, icon: Icon, color = "primary" }) => (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-    >
-      <Card sx={{ 
+const ScoreCard = ({ title, value, change, icon: Icon, color = "primary" }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.5 }}
+  >
+    <Card
+      sx={{
         height: "100%",
         minHeight: 160,
         borderRadius: 3,
         border: "1px solid",
         borderColor: "divider",
-        background: `linear-gradient(135deg, ${color === 'primary' ? 'rgba(69, 56, 202, 0.05)' : color === 'success' ? 'rgba(16, 185, 129, 0.05)' : color === 'error' ? 'rgba(239, 68, 68, 0.05)' : 'rgba(59, 130, 246, 0.05)'} 0%, transparent 100%)`,
+        background: `linear-gradient(135deg, ${
+          color === "primary"
+            ? "rgba(69, 56, 202, 0.05)"
+            : color === "info"
+              ? "rgba(59, 130, 246, 0.05)"
+              : color === "warning"
+                ? "rgba(245, 158, 11, 0.05)"
+                : "rgba(239, 68, 68, 0.05)"
+        } 0%, transparent 100%)`,
         transition: "all 0.3s ease",
         "&:hover": {
           borderColor: `${color}.main`,
           transform: "translateY(-4px)",
           boxShadow: `0 8px 24px rgba(69, 56, 202, 0.15)`,
         },
-      }}>
-        <CardContent sx={{ p: 3, height: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-          <Box sx={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 2 }}>
-            <Box sx={{ flex: 1, minWidth: 0 }}>
-              <Typography color="text.secondary" variant="body2" sx={{ fontWeight: 500, mb: 1.5 }}>
-                {title}
-              </Typography>
-              <Typography variant="h3" component="div" color={`${color}.main`} sx={{ fontWeight: 700, mb: 1 }}>
-                {typeof value === "number" ? value.toLocaleString() : value}
-              </Typography>
-            </Box>
-            <Box sx={{
+      }}
+    >
+      <CardContent sx={{ p: 3, height: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+        <Box sx={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 2 }}>
+          <Box sx={{ flex: 1, minWidth: 0 }}>
+            <Typography color="text.secondary" gutterBottom variant="body2" sx={{ fontWeight: 500, mb: 1.5 }}>
+              {title}
+            </Typography>
+            <Typography variant="h3" component="div" color={`${color}.main`} sx={{ fontWeight: 700 }}>
+              {value}
+            </Typography>
+          </Box>
+          <Box
+            sx={{
               p: 1.5,
               borderRadius: 2,
-              bgcolor: `${color}.main`,
-              color: "white",
+              bgcolor: `${color === "primary" ? "rgba(69, 56, 202, 0.1)" : color === "info" ? "rgba(59, 130, 246, 0.1)" : color === "warning" ? "rgba(245, 158, 11, 0.1)" : "rgba(239, 68, 68, 0.1)"}`,
               display: "inline-flex",
               flexShrink: 0,
               ml: 2,
-            }}>
-              <Icon size={24} />
-            </Box>
+            }}
+          >
+            <Icon size={24} style={{ color: color === "primary" ? "#4538CA" : color === "info" ? "#3B82F6" : color === "warning" ? "#F59E0B" : "#EF4444" }} />
           </Box>
-          {change !== undefined && (
-            <Box sx={{ display: "flex", alignItems: "center" }}>
-              <TrendingUp size={16} color={change > 0 ? "#10B981" : "#EF4444"} />
-              <Typography variant="body2" color={change > 0 ? "success.main" : "error.main"} sx={{ ml: 0.5, fontWeight: 600 }}>
-                {change > 0 ? "+" : ""}
-                {change}%
-              </Typography>
-            </Box>
-          )}
-        </CardContent>
-      </Card>
-    </motion.div>
-  )
-
-  const PackCard = ({ pack, showAuthor = false }: { pack: PromptPack; showAuthor?: boolean }) => (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.5 }}
-    >
-      <Card sx={{ 
-        height: "100%", 
-        display: "flex", 
-        flexDirection: "column",
-        borderRadius: 3,
-        border: "1px solid",
-        borderColor: "divider",
-        transition: "all 0.3s ease",
-        "&:hover": {
-          borderColor: "primary.main",
-          transform: "translateY(-4px)",
-          boxShadow: "0 8px 24px rgba(69, 56, 202, 0.15)",
-        },
-      }}>
-        <CardContent sx={{ flexGrow: 1, p: 3 }}>
-          <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", mb: 2 }}>
-            <Box sx={{ flexGrow: 1 }}>
-              <Typography variant="h6" component="h3" sx={{ mb: 1, lineHeight: 1.3 }}>
-                {pack.title}
-              </Typography>
-              {showAuthor && pack.author && (
-                <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
-                  <Avatar src={pack.author.avatarUrl} sx={{ width: 20, height: 20, mr: 1 }}>
-                    {pack.author.username.charAt(0).toUpperCase()}
-                  </Avatar>
-                  <Typography variant="body2" color="text.secondary">
-                    {pack.author.username}
-                  </Typography>
-                </Box>
-              )}
-            </Box>
-            <IconButton size="small" onClick={(e) => handleMenuClick(pack.id, e)}>
-              <MoreVert size={16} />
-            </IconButton>
-            <Menu
-              anchorEl={menuAnchor[pack.id]}
-              open={Boolean(menuAnchor[pack.id])}
-              onClose={() => handleMenuClose(pack.id)}
-            >
-              <MenuItem component={Link} href={`/packs/${pack.id}`} onClick={() => handleMenuClose(pack.id)}>
-                <Eye size={16} style={{ marginRight: 8 }} />
-                View
-              </MenuItem>
-              {!showAuthor && (
-                <MenuItem component={Link} href={`/packs/${pack.id}/edit`} onClick={() => handleMenuClose(pack.id)}>
-                  <Edit size={16} style={{ marginRight: 8 }} />
-                  Edit
-                </MenuItem>
-              )}
-              <MenuItem onClick={() => handleMenuClose(pack.id)}>
-                <Share size={16} style={{ marginRight: 8 }} />
-                Share
-              </MenuItem>
-            </Menu>
+        </Box>
+        {change !== undefined && (
+          <Box sx={{ display: "flex", alignItems: "center", mt: 2 }}>
+            {change > 0 ? (
+              <TrendingUp size={16} color="#10B981" />
+            ) : (
+              <TrendingDown size={16} color="#EF4444" />
+            )}
+            <Typography variant="body2" color={change > 0 ? "success.main" : "error.main"} sx={{ ml: 0.5, fontWeight: 600 }}>
+              {change > 0 ? "+" : ""}
+              {change}%
+            </Typography>
           </Box>
+        )}
+      </CardContent>
+    </Card>
+  </motion.div>
+)
 
-          <Typography variant="body2" color="text.secondary" sx={{ mb: 2, lineHeight: 1.4 }}>
-            {pack.description}
+const FrameworkScoreCard = ({ framework }) => (
+  <Card sx={{ mb: 2, borderRadius: 2, border: "1px solid", borderColor: "divider" }}>
+    <CardContent sx={{ p: 3 }}>
+      <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
+        <Typography variant="h6" component="div" sx={{ fontWeight: 600 }}>
+          {framework.name}
+        </Typography>
+        <Box display="flex" alignItems="center" gap={1}>
+          <Typography variant="h5" sx={{ fontWeight: 700 }} style={{ color: framework.color }}>
+            {framework.score}%
           </Typography>
+          {framework.trend === "up" && <TrendingUp color="#10B981" size={20} />}
+          {framework.trend === "down" && <TrendingDown color="#EF4444" size={20} />}
+          {framework.trend === "stable" && <TrendingUp color="#9CA3AF" size={20} />}
+        </Box>
+      </Box>
+      <LinearProgress
+        variant="determinate"
+        value={framework.score}
+        sx={{
+          height: 8,
+          borderRadius: 4,
+          backgroundColor: "grey.200",
+          "& .MuiLinearProgress-bar": {
+            background: `linear-gradient(90deg, rgba(69, 56, 202, 1) 0%, rgba(16, 185, 129, 1) 100%)`,
+            borderRadius: 4,
+          },
+        }}
+      />
+    </CardContent>
+  </Card>
+)
 
-          <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5, mb: 2 }}>
-            {pack.tags.slice(0, 3).map((tag) => (
-              <Chip key={tag} label={tag} size="small" variant="outlined" />
-            ))}
-            {pack.tags.length > 3 && <Chip label={`+${pack.tags.length - 3}`} size="small" variant="outlined" />}
-          </Box>
+const getStatusColor = (status: string) => {
+  switch (status) {
+    case "completed":
+      return "success"
+    case "in-progress":
+      return "warning"
+    case "failed":
+      return "error"
+    default:
+      return "default"
+  }
+}
 
-          <Box sx={{ display: "flex", alignItems: "center", gap: 2, mt: "auto" }}>
-            <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-              <Download size={14} />
-              <Typography variant="body2" color="text.secondary">
-                {pack.downloadCount.toLocaleString()}
-              </Typography>
-            </Box>
-            <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-              <Heart size={14} />
-              <Typography variant="body2" color="text.secondary">
-                {pack.likeCount}
-              </Typography>
-            </Box>
-            <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-              <Star size={14} />
-              <Typography variant="body2" color="text.secondary">
-                {pack.averageRating.toFixed(1)}
-              </Typography>
-            </Box>
-          </Box>
-        </CardContent>
-      </Card>
-    </motion.div>
-  )
-
+export function DashboardContent() {
   return (
-    <Box>
-      {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 4 }}>
-          <Box>
-            <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 1 }}>
+    <Box sx={{ flexGrow: 1, bgcolor: "background.default", minHeight: "100vh" }}>
+      <Container maxWidth="xl" sx={{ py: 4 }}>
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <Box sx={{ mb: 4 }}>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}>
               <Typography variant="h4" component="h1" sx={{ fontWeight: 700 }}>
-                Welcome back, {user?.fullName || user?.username}!
+                Compliance Dashboard
               </Typography>
               <Chip
                 icon={<Sparkles size={14} />}
@@ -277,119 +245,191 @@ export function DashboardContent() {
               />
             </Box>
             <Typography variant="body1" color="text.secondary">
-              Manage your prompt packs and discover new ones from the community.
+              Monitor your organization's compliance posture and track improvements across frameworks.
             </Typography>
           </Box>
-          <Button 
-            variant="contained" 
-            startIcon={<Plus size={20} />} 
-            component={Link} 
-            href="/create" 
-            size="large"
-            sx={{
-              px: 3,
-              py: 1.5,
-              borderRadius: 2,
-              fontWeight: 600,
-              background: "linear-gradient(135deg, rgba(69, 56, 202, 1) 0%, rgba(16, 185, 129, 1) 100%)",
-              boxShadow: "0 4px 12px rgba(69, 56, 202, 0.25)",
-              "&:hover": {
-                background: "linear-gradient(135deg, rgba(59, 46, 172, 1) 0%, rgba(14, 165, 115, 1) 100%)",
-                boxShadow: "0 6px 20px rgba(69, 56, 202, 0.35)",
-              },
-            }}
-          >
-            Create Pack
-          </Button>
-        </Box>
-      </motion.div>
+        </motion.div>
 
-      {/* Stats Cards */}
-      <Grid container spacing={3} sx={{ mb: 4 }}>
-        <Grid item xs={12} sm={6} md={3}>
-          <StatCard
-            title="My Packs"
-            value={stats.totalPacks}
-            change={stats.packGrowth}
-            icon={BookOpen}
-            color="primary"
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <StatCard
-            title="Total Downloads"
-            value={stats.totalDownloads}
-            change={stats.downloadGrowth}
-            icon={Download}
-            color="success"
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <StatCard title="Total Likes" value={stats.totalLikes} icon={Heart} color="error" />
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <StatCard title="Total Views" value={stats.totalViews} icon={Eye} color="info" />
-        </Grid>
-      </Grid>
-
-      {/* My Packs Section */}
-      <Box sx={{ mb: 4 }}>
-        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
-          <Typography variant="h5" component="h2" sx={{ fontWeight: 700 }}>
-            My Packs
-          </Typography>
-          <Button component={Link} href="/my-packs" variant="outlined" sx={{ borderRadius: 2, fontWeight: 600 }}>
-            View All
-          </Button>
-        </Box>
-
-        {userPacks.length > 0 ? (
-          <Grid container spacing={3}>
-            {userPacks.slice(0, 3).map((pack) => (
-              <Grid item xs={12} md={4} key={pack.id}>
-                <PackCard pack={pack} />
-              </Grid>
-            ))}
+        {/* Key Metrics */}
+        <Grid container spacing={3} sx={{ mb: 4, width: "100%" }}>
+          <Grid item xs={12} sm={6} md={3}>
+            <ScoreCard
+              title="Overall Compliance Score"
+              value={`${mockDashboardData.overallScore}%`}
+              change={mockDashboardData.scoreChange}
+              icon={Activity}
+              color="primary"
+            />
           </Grid>
-        ) : (
-          <Card>
-            <CardContent sx={{ textAlign: "center", py: 6 }}>
-              <BookOpen size={48} style={{ color: "#9CA3AF", marginBottom: 16 }} />
-              <Typography variant="h6" gutterBottom>
-                No packs yet
-              </Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-                Create your first prompt pack to get started
-              </Typography>
-              <Button variant="contained" component={Link} href="/create">
-                Create Your First Pack
-              </Button>
-            </CardContent>
-          </Card>
-        )}
-      </Box>
-
-      <Divider sx={{ my: 4 }} />
-
-      {/* Featured Packs Section */}
-      <Box>
-        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
-          <Typography variant="h5" component="h2" sx={{ fontWeight: 700 }}>
-            Featured Packs
-          </Typography>
-          <Button component={Link} href="/featured" variant="outlined" sx={{ borderRadius: 2, fontWeight: 600 }}>
-            View All
-          </Button>
-        </Box>
+          <Grid item xs={12} sm={6} md={3}>
+            <ScoreCard
+              title="Total Assessments"
+              value={mockDashboardData.totalAssessments}
+              icon={Shield}
+              color="info"
+            />
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <ScoreCard title="Active Findings" value={mockDashboardData.activeFindings} icon={AlertTriangle} color="warning" />
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <ScoreCard title="High Risk Items" value={mockDashboardData.highRiskItems} icon={AlertTriangle} color="error" />
+          </Grid>
+        </Grid>
 
         <Grid container spacing={3}>
-          {featuredPacks.map((pack) => (
-            <Grid item xs={12} sm={6} md={4} key={pack.id}>
-              <PackCard pack={pack} showAuthor={true} />
-            </Grid>
-          ))}
+          {/* Scoring Engine */}
+          <Grid item xs={12} lg={8}>
+            <ScoringEngine
+              overallScore={mockDashboardData.overallScore}
+              breakdown={mockScoringData.breakdown}
+              riskFactors={mockScoringData.riskFactors}
+            />
+          </Grid>
+
+          {/* Framework Scores and Risk Distribution */}
+          <Grid item xs={12} lg={4}>
+            <Card sx={{ mb: 3, borderRadius: 3, border: "1px solid", borderColor: "divider" }}>
+              <CardContent sx={{ p: 3 }}>
+                <Typography variant="h6" gutterBottom sx={{ fontWeight: 600, mb: 3 }}>
+                  Framework Compliance Scores
+                </Typography>
+                {mockDashboardData.complianceFrameworks.map((framework) => (
+                  <FrameworkScoreCard key={framework.name} framework={framework} />
+                ))}
+              </CardContent>
+            </Card>
+
+            <Card sx={{ borderRadius: 3, border: "1px solid", borderColor: "divider" }}>
+              <CardContent sx={{ p: 3 }}>
+                <Typography variant="h6" gutterBottom sx={{ fontWeight: 600, mb: 3 }}>
+                  Risk Distribution
+                </Typography>
+                <Grid container spacing={2}>
+                  <Grid item xs={6}>
+                    <Box textAlign="center" p={2} sx={{ borderRadius: 2, bgcolor: "rgba(239, 68, 68, 0.05)" }}>
+                      <Typography variant="h3" color="error.main" sx={{ fontWeight: 700 }}>
+                        {mockDashboardData.riskDistribution.critical}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+                        Critical
+                      </Typography>
+                    </Box>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Box textAlign="center" p={2} sx={{ borderRadius: 2, bgcolor: "rgba(245, 158, 11, 0.05)" }}>
+                      <Typography variant="h3" color="warning.main" sx={{ fontWeight: 700 }}>
+                        {mockDashboardData.riskDistribution.high}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+                        High
+                      </Typography>
+                    </Box>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Box textAlign="center" p={2} sx={{ borderRadius: 2, bgcolor: "rgba(59, 130, 246, 0.05)" }}>
+                      <Typography variant="h3" color="info.main" sx={{ fontWeight: 700 }}>
+                        {mockDashboardData.riskDistribution.medium}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+                        Medium
+                      </Typography>
+                    </Box>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Box textAlign="center" p={2} sx={{ borderRadius: 2, bgcolor: "rgba(16, 185, 129, 0.05)" }}>
+                      <Typography variant="h3" color="success.main" sx={{ fontWeight: 700 }}>
+                        {mockDashboardData.riskDistribution.low}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+                        Low
+                      </Typography>
+                    </Box>
+                  </Grid>
+                </Grid>
+              </CardContent>
+            </Card>
+          </Grid>
+
+          {/* Recent Assessments */}
+          <Grid item xs={12}>
+            <Card sx={{ borderRadius: 3, border: "1px solid", borderColor: "divider" }}>
+              <CardContent sx={{ p: 4 }}>
+                <Typography variant="h6" gutterBottom sx={{ fontWeight: 600, mb: 3 }}>
+                  Recent Assessments
+                </Typography>
+                <TableContainer>
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell sx={{ fontWeight: 600 }}>Assessment Name</TableCell>
+                        <TableCell sx={{ fontWeight: 600 }}>Framework</TableCell>
+                        <TableCell sx={{ fontWeight: 600 }}>Score</TableCell>
+                        <TableCell sx={{ fontWeight: 600 }}>Status</TableCell>
+                        <TableCell sx={{ fontWeight: 600 }}>Date</TableCell>
+                        <TableCell sx={{ fontWeight: 600 }}>Findings</TableCell>
+                        <TableCell align="right" sx={{ fontWeight: 600 }}>Actions</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {mockDashboardData.recentAssessments.map((assessment) => (
+                        <TableRow key={assessment.id} hover>
+                          <TableCell>
+                            <Typography variant="body2" fontWeight="medium">
+                              {assessment.name}
+                            </Typography>
+                          </TableCell>
+                          <TableCell>
+                            <Chip label={assessment.framework} size="small" variant="outlined" />
+                          </TableCell>
+                          <TableCell>
+                            <Typography
+                              variant="body2"
+                              color={
+                                assessment.score >= 80
+                                  ? "success.main"
+                                  : assessment.score >= 60
+                                    ? "warning.main"
+                                    : "error.main"
+                              }
+                              fontWeight="medium"
+                            >
+                              {assessment.score}%
+                            </Typography>
+                          </TableCell>
+                          <TableCell>
+                            <Chip
+                              label={assessment.status}
+                              size="small"
+                              color={getStatusColor(assessment.status)}
+                              icon={assessment.status === "completed" ? <CheckCircle size={14} /> : <Clock size={14} />}
+                            />
+                          </TableCell>
+                          <TableCell>
+                            <Typography variant="body2" color="text.secondary">
+                              {new Date(assessment.date).toLocaleDateString()}
+                            </Typography>
+                          </TableCell>
+                          <TableCell>
+                            <Typography variant="body2">{assessment.findings} findings</Typography>
+                          </TableCell>
+                          <TableCell align="right">
+                            <Tooltip title="More actions">
+                              <IconButton size="small">
+                                <MoreVertical size={16} />
+                              </IconButton>
+                            </Tooltip>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </CardContent>
+            </Card>
+          </Grid>
         </Grid>
-      </Box>
+      </Container>
     </Box>
   )
 }

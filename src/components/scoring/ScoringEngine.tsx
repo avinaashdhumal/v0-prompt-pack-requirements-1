@@ -1,3 +1,5 @@
+"use client"
+
 import {
   Box,
   Card,
@@ -13,7 +15,7 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material"
-import { TrendingUp, TrendingDown } from "@mui/icons-material"
+import { TrendingUp, TrendingDown } from "lucide-react"
 
 interface ScoreBreakdown {
   category: string
@@ -57,11 +59,13 @@ export default function ScoringEngine({ overallScore, breakdown, riskFactors }: 
   return (
     <Box>
       {/* Overall Score */}
-      <Card sx={{ mb: 3 }}>
-        <CardContent>
-          <Box display="flex" alignItems="center" justifyContent="between" mb={2}>
-            <Typography variant="h6">Overall Compliance Score</Typography>
-            <Typography variant="h3" color={getScoreColor(overallScore)}>
+      <Card sx={{ mb: 3, borderRadius: 3, border: "1px solid", borderColor: "divider" }}>
+        <CardContent sx={{ p: 4 }}>
+          <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
+            <Typography variant="h6" sx={{ fontWeight: 600 }}>
+              Overall Compliance Score
+            </Typography>
+            <Typography variant="h3" color={getScoreColor(overallScore)} sx={{ fontWeight: 700 }}>
               {overallScore}%
             </Typography>
           </Box>
@@ -73,12 +77,12 @@ export default function ScoringEngine({ overallScore, breakdown, riskFactors }: 
               borderRadius: 6,
               backgroundColor: "grey.200",
               "& .MuiLinearProgress-bar": {
-                backgroundColor: getScoreColor(overallScore),
+                background: `linear-gradient(90deg, rgba(69, 56, 202, 1) 0%, rgba(16, 185, 129, 1) 100%)`,
                 borderRadius: 6,
               },
             }}
           />
-          <Typography variant="body2" color="textSecondary" mt={1}>
+          <Typography variant="body2" color="text.secondary" mt={2}>
             Based on {breakdown.reduce((sum, item) => sum + item.findings, 0)} findings across {breakdown.length}{" "}
             categories
           </Typography>
@@ -86,21 +90,21 @@ export default function ScoringEngine({ overallScore, breakdown, riskFactors }: 
       </Card>
 
       {/* Score Breakdown */}
-      <Card sx={{ mb: 3 }}>
-        <CardContent>
-          <Typography variant="h6" gutterBottom>
+      <Card sx={{ mb: 3, borderRadius: 3, border: "1px solid", borderColor: "divider" }}>
+        <CardContent sx={{ p: 4 }}>
+          <Typography variant="h6" gutterBottom sx={{ fontWeight: 600, mb: 3 }}>
             Score Breakdown by Category
           </Typography>
           <TableContainer>
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>Category</TableCell>
-                  <TableCell>Score</TableCell>
-                  <TableCell>Weight</TableCell>
-                  <TableCell>Trend</TableCell>
-                  <TableCell>Findings</TableCell>
-                  <TableCell>Progress</TableCell>
+                  <TableCell sx={{ fontWeight: 600 }}>Category</TableCell>
+                  <TableCell sx={{ fontWeight: 600 }}>Score</TableCell>
+                  <TableCell sx={{ fontWeight: 600 }}>Weight</TableCell>
+                  <TableCell sx={{ fontWeight: 600 }}>Trend</TableCell>
+                  <TableCell sx={{ fontWeight: 600 }}>Findings</TableCell>
+                  <TableCell sx={{ fontWeight: 600 }}>Progress</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -121,9 +125,9 @@ export default function ScoringEngine({ overallScore, breakdown, riskFactors }: 
                     </TableCell>
                     <TableCell>
                       <Box display="flex" alignItems="center">
-                        {item.trend === "up" && <TrendingUp color="success" fontSize="small" />}
-                        {item.trend === "down" && <TrendingDown color="error" fontSize="small" />}
-                        {item.trend === "stable" && <TrendingUp color="disabled" fontSize="small" />}
+                        {item.trend === "up" && <TrendingUp color="#10B981" size={18} />}
+                        {item.trend === "down" && <TrendingDown color="#EF4444" size={18} />}
+                        {item.trend === "stable" && <TrendingUp color="#9CA3AF" size={18} />}
                       </Box>
                     </TableCell>
                     <TableCell>
@@ -138,7 +142,7 @@ export default function ScoringEngine({ overallScore, breakdown, riskFactors }: 
                           borderRadius: 3,
                           backgroundColor: "grey.200",
                           "& .MuiLinearProgress-bar": {
-                            backgroundColor: getScoreColor(item.score),
+                            background: `linear-gradient(90deg, rgba(69, 56, 202, 1) 0%, rgba(16, 185, 129, 1) 100%)`,
                             borderRadius: 3,
                           },
                         }}
@@ -153,17 +157,17 @@ export default function ScoringEngine({ overallScore, breakdown, riskFactors }: 
       </Card>
 
       {/* Risk Factors */}
-      <Card>
-        <CardContent>
-          <Typography variant="h6" gutterBottom>
+      <Card sx={{ borderRadius: 3, border: "1px solid", borderColor: "divider" }}>
+        <CardContent sx={{ p: 4 }}>
+          <Typography variant="h6" gutterBottom sx={{ fontWeight: 600, mb: 3 }}>
             Key Risk Factors
           </Typography>
           <Grid container spacing={2}>
             {riskFactors.map((risk, index) => (
               <Grid item xs={12} md={6} key={index}>
-                <Card variant="outlined">
+                <Card variant="outlined" sx={{ borderRadius: 2 }}>
                   <CardContent sx={{ p: 2 }}>
-                    <Box display="flex" alignItems="center" justifyContent="between" mb={1}>
+                    <Box display="flex" alignItems="center" justifyContent="space-between" mb={1}>
                       <Typography variant="body2" fontWeight="medium">
                         {risk.name}
                       </Typography>
@@ -171,7 +175,7 @@ export default function ScoringEngine({ overallScore, breakdown, riskFactors }: 
                         {risk.score}%
                       </Typography>
                     </Box>
-                    <Box display="flex" gap={1} mb={1}>
+                    <Box display="flex" gap={1} mb={1.5}>
                       <Chip
                         label={`Impact: ${risk.impact}`}
                         size="small"
@@ -193,7 +197,7 @@ export default function ScoringEngine({ overallScore, breakdown, riskFactors }: 
                         borderRadius: 2,
                         backgroundColor: "grey.200",
                         "& .MuiLinearProgress-bar": {
-                          backgroundColor: getScoreColor(risk.score),
+                          background: `linear-gradient(90deg, rgba(69, 56, 202, 1) 0%, rgba(16, 185, 129, 1) 100%)`,
                           borderRadius: 2,
                         },
                       }}
