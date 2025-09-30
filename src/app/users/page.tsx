@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useState, useEffect } from "react"
+import { motion } from "framer-motion"
 import {
   Box,
   Typography,
@@ -20,18 +21,20 @@ import {
   Tooltip,
   Menu,
   MenuItem,
+  Container,
 } from "@mui/material"
 import {
-  Add,
-  MoreVert,
+  UserPlus,
+  MoreVertical,
   Edit,
-  Delete,
-  Block,
+  Trash2,
+  Ban,
   CheckCircle,
-  Person,
-  AdminPanelSettings,
-  Security,
-} from "@mui/icons-material"
+  Users,
+  ShieldCheck,
+  Shield,
+  Sparkles,
+} from "lucide-react"
 
 // Mock user data
 const mockUsers = [
@@ -84,13 +87,13 @@ const mockUsers = [
 const getRoleIcon = (role: string) => {
   switch (role) {
     case "admin":
-      return <AdminPanelSettings />
+      return <ShieldCheck size={16} />
     case "compliance_officer":
-      return <Security />
+      return <Shield size={16} />
     case "auditor":
-      return <CheckCircle />
+      return <CheckCircle size={16} />
     default:
-      return <Person />
+      return <Users size={16} />
   }
 }
 
@@ -112,23 +115,81 @@ const getStatusColor = (status: string) => {
 }
 
 const StatCard = ({ title, value, icon: Icon, color = "primary" }) => (
-  <Card sx={{ height: "100%" }}>
-    <CardContent>
-      <Box display="flex" alignItems="center" justifyContent="space-between">
-        <Box>
-          <Typography color="textSecondary" gutterBottom variant="body2">
-            {title}
-          </Typography>
-          <Typography variant="h4" component="div" color={color}>
-            {value}
-          </Typography>
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.5 }}
+  >
+    <Card
+      sx={{
+        height: "100%",
+        minHeight: 160,
+        borderRadius: 3,
+        border: "1px solid",
+        borderColor: "divider",
+        background: `linear-gradient(135deg, ${
+          color === "primary"
+            ? "rgba(69, 56, 202, 0.05)"
+            : color === "success"
+              ? "rgba(16, 185, 129, 0.05)"
+              : color === "error"
+                ? "rgba(239, 68, 68, 0.05)"
+                : "rgba(59, 130, 246, 0.05)"
+        } 0%, transparent 100%)`,
+        transition: "all 0.3s ease",
+        "&:hover": {
+          borderColor: `${color}.main`,
+          transform: "translateY(-4px)",
+          boxShadow: `0 8px 24px rgba(69, 56, 202, 0.15)`,
+        },
+      }}
+    >
+      <CardContent sx={{ p: 3, height: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+        <Box sx={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 2 }}>
+          <Box sx={{ flex: 1, minWidth: 0 }}>
+            <Typography color="text.secondary" gutterBottom variant="body2" sx={{ fontWeight: 500, mb: 1.5 }}>
+              {title}
+            </Typography>
+            <Typography variant="h3" component="div" color={`${color}.main`} sx={{ fontWeight: 700 }}>
+              {value}
+            </Typography>
+          </Box>
+          <Box
+            sx={{
+              p: 1.5,
+              borderRadius: 2,
+              bgcolor: `${
+                color === "primary"
+                  ? "rgba(69, 56, 202, 0.1)"
+                  : color === "success"
+                    ? "rgba(16, 185, 129, 0.1)"
+                    : color === "error"
+                      ? "rgba(239, 68, 68, 0.1)"
+                      : "rgba(59, 130, 246, 0.1)"
+              }`,
+              display: "inline-flex",
+              flexShrink: 0,
+              ml: 2,
+            }}
+          >
+            <Icon
+              size={24}
+              style={{
+                color:
+                  color === "primary"
+                    ? "#4538CA"
+                    : color === "success"
+                      ? "#10B981"
+                      : color === "error"
+                        ? "#EF4444"
+                        : "#3B82F6",
+              }}
+            />
+          </Box>
         </Box>
-        <Avatar sx={{ bgcolor: `${color}.light` }}>
-          <Icon />
-        </Avatar>
-      </Box>
-    </CardContent>
-  </Card>
+      </CardContent>
+    </Card>
+  </motion.div>
 )
 
 // Locale-stable date formatter
@@ -159,130 +220,176 @@ export default function UsersPage() {
   const complianceOfficers = mockUsers.filter((user) => user.role === "compliance_officer").length
 
   return (
-    <Box sx={{ flexGrow: 1, p: 3 }}>
-      <Box display="flex" alignItems="center" justifyContent="space-between" mb={3}>
-        <Box>
-          <Typography variant="h4" component="h1" gutterBottom>
-            User Management
-          </Typography>
-          <Typography variant="body1" color="textSecondary">
-            Manage user accounts, roles, and permissions for your organization.
-          </Typography>
-        </Box>
-        <Button variant="contained" startIcon={<Add />} size="large">
-          Add User
-        </Button>
-      </Box>
+    <Box sx={{ flexGrow: 1, bgcolor: "background.default", minHeight: "100vh" }}>
+      <Container maxWidth="xl" sx={{ py: 4 }}>
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <Box display="flex" alignItems="center" justifyContent="space-between" mb={4}>
+            <Box>
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}>
+                <Typography variant="h4" component="h1" sx={{ fontWeight: 700 }}>
+                  User Management
+                </Typography>
+                <Chip
+                  icon={<Sparkles size={14} />}
+                  label="AI-Powered"
+                  size="small"
+                  sx={{
+                    bgcolor: "rgba(16, 185, 129, 0.1)",
+                    color: "success.main",
+                    fontWeight: 600,
+                    borderRadius: 2,
+                  }}
+                />
+              </Box>
+              <Typography variant="body1" color="text.secondary">
+                Manage user accounts, roles, and permissions for your organization.
+              </Typography>
+            </Box>
+            <Button
+              variant="contained"
+              startIcon={<UserPlus size={20} />}
+              size="large"
+              sx={{
+                background: "linear-gradient(90deg, rgba(69, 56, 202, 1) 0%, rgba(16, 185, 129, 1) 100%)",
+                borderRadius: 2,
+                px: 3,
+                py: 1.5,
+                fontWeight: 600,
+                textTransform: "none",
+                boxShadow: "0 4px 12px rgba(69, 56, 202, 0.3)",
+                "&:hover": {
+                  background: "linear-gradient(90deg, rgba(69, 56, 202, 0.9) 0%, rgba(16, 185, 129, 0.9) 100%)",
+                  boxShadow: "0 6px 16px rgba(69, 56, 202, 0.4)",
+                },
+              }}
+            >
+              Add User
+            </Button>
+          </Box>
+        </motion.div>
 
-      {/* Statistics */}
-      <Grid container spacing={3} sx={{ mb: 4 }}>
-        <Grid item xs={12} sm={6} md={3}>
-          <StatCard title="Total Users" value={mockUsers.length} icon={Person} color="primary" />
+        {/* Statistics */}
+        <Grid container spacing={3} sx={{ mb: 4, width: "100%" }}>
+          <Grid item xs={12} sm={6} md={3}>
+            <StatCard title="Total Users" value={mockUsers.length} icon={Users} color="primary" />
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <StatCard title="Active Users" value={activeUsers} icon={CheckCircle} color="success" />
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <StatCard title="Administrators" value={adminUsers} icon={ShieldCheck} color="error" />
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <StatCard title="Compliance Officers" value={complianceOfficers} icon={Shield} color="info" />
+          </Grid>
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <StatCard title="Active Users" value={activeUsers} icon={CheckCircle} color="success" />
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <StatCard title="Administrators" value={adminUsers} icon={AdminPanelSettings} color="error" />
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <StatCard title="Compliance Officers" value={complianceOfficers} icon={Security} color="info" />
-        </Grid>
-      </Grid>
 
-      {/* Users Table */}
-      <Card>
-        <CardContent>
-          <Typography variant="h6" gutterBottom>
-            Users
-          </Typography>
-          <TableContainer>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>User</TableCell>
-                  <TableCell>Role</TableCell>
-                  <TableCell>Status</TableCell>
-                  <TableCell>Organization</TableCell>
-                  <TableCell>Last Login</TableCell>
-                  <TableCell>Created</TableCell>
-                  <TableCell align="right">Actions</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {mockUsers.map((user) => (
-                  <TableRow key={user.id} hover>
-                    <TableCell>
-                      <Box display="flex" alignItems="center" gap={2}>
-                        <Avatar sx={{ width: 32, height: 32 }}>
-                          {user.firstName[0]}
-                          {user.lastName[0]}
-                        </Avatar>
-                        <Box>
-                          <Typography variant="body2" fontWeight="medium">
-                            {user.firstName} {user.lastName}
-                          </Typography>
-                          <Typography variant="caption" color="textSecondary">
-                            {user.email}
-                          </Typography>
-                        </Box>
-                      </Box>
-                    </TableCell>
-                    <TableCell>
-                      <Chip
-                        label={user.role.replace("_", " ")}
-                        size="small"
-                        color={getRoleColor(user.role)}
-                        icon={getRoleIcon(user.role)}
-                        variant="outlined"
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <Chip label={user.status} size="small" color={getStatusColor(user.status)} variant="outlined" />
-                    </TableCell>
-                    <TableCell>
-                      <Typography variant="body2">{user.organization}</Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Typography variant="body2" color="textSecondary">
-                        {isMounted ? formatDate(user.lastLogin) : ""}
-                      </Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Typography variant="body2" color="textSecondary">
-                        {isMounted ? formatDate(user.createdAt) : ""}
-                      </Typography>
-                    </TableCell>
-                    <TableCell align="right">
-                      <Tooltip title="More actions">
-                        <IconButton size="small" onClick={(e) => handleMenuClick(e, user.id)}>
-                          <MoreVert />
-                        </IconButton>
-                      </Tooltip>
-                    </TableCell>
+        {/* Users Table */}
+        <Card sx={{ borderRadius: 3, border: "1px solid", borderColor: "divider" }}>
+          <CardContent sx={{ p: 4 }}>
+            <Typography variant="h6" gutterBottom sx={{ fontWeight: 600, mb: 3 }}>
+              Users
+            </Typography>
+            <TableContainer>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell sx={{ fontWeight: 600 }}>User</TableCell>
+                    <TableCell sx={{ fontWeight: 600 }}>Role</TableCell>
+                    <TableCell sx={{ fontWeight: 600 }}>Status</TableCell>
+                    <TableCell sx={{ fontWeight: 600 }}>Organization</TableCell>
+                    <TableCell sx={{ fontWeight: 600 }}>Last Login</TableCell>
+                    <TableCell sx={{ fontWeight: 600 }}>Created</TableCell>
+                    <TableCell align="right" sx={{ fontWeight: 600 }}>Actions</TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </CardContent>
-      </Card>
+                </TableHead>
+                <TableBody>
+                  {mockUsers.map((user) => (
+                    <TableRow key={user.id} hover>
+                      <TableCell>
+                        <Box display="flex" alignItems="center" gap={2}>
+                          <Avatar
+                            sx={{
+                              width: 40,
+                              height: 40,
+                              background: "linear-gradient(135deg, rgba(69, 56, 202, 1) 0%, rgba(16, 185, 129, 1) 100%)",
+                              fontWeight: 600,
+                            }}
+                          >
+                            {user.firstName[0]}
+                            {user.lastName[0]}
+                          </Avatar>
+                          <Box>
+                            <Typography variant="body2" fontWeight="medium">
+                              {user.firstName} {user.lastName}
+                            </Typography>
+                            <Typography variant="caption" color="text.secondary">
+                              {user.email}
+                            </Typography>
+                          </Box>
+                        </Box>
+                      </TableCell>
+                      <TableCell>
+                        <Chip
+                          label={user.role.replace("_", " ")}
+                          size="small"
+                          color={getRoleColor(user.role)}
+                          icon={getRoleIcon(user.role)}
+                          variant="outlined"
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <Chip label={user.status} size="small" color={getStatusColor(user.status)} variant="outlined" />
+                      </TableCell>
+                      <TableCell>
+                        <Typography variant="body2">{user.organization}</Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography variant="body2" color="text.secondary">
+                          {isMounted ? formatDate(user.lastLogin) : ""}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography variant="body2" color="text.secondary">
+                          {isMounted ? formatDate(user.createdAt) : ""}
+                        </Typography>
+                      </TableCell>
+                      <TableCell align="right">
+                        <Tooltip title="More actions">
+                          <IconButton size="small" onClick={(e) => handleMenuClick(e, user.id)}>
+                            <MoreVertical size={16} />
+                          </IconButton>
+                        </Tooltip>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </CardContent>
+        </Card>
 
-      {/* Action Menu */}
-      <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
-        <MenuItem onClick={handleMenuClose}>
-          <Edit fontSize="small" sx={{ mr: 1 }} />
-          Edit User
-        </MenuItem>
-        <MenuItem onClick={handleMenuClose}>
-          <Block fontSize="small" sx={{ mr: 1 }} />
-          Deactivate
-        </MenuItem>
-        <MenuItem onClick={handleMenuClose} sx={{ color: "error.main" }}>
-          <Delete fontSize="small" sx={{ mr: 1 }} />
-          Delete User
-        </MenuItem>
-      </Menu>
+        {/* Action Menu */}
+        <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
+          <MenuItem onClick={handleMenuClose}>
+            <Edit size={16} style={{ marginRight: 8 }} />
+            Edit User
+          </MenuItem>
+          <MenuItem onClick={handleMenuClose}>
+            <Ban size={16} style={{ marginRight: 8 }} />
+            Deactivate
+          </MenuItem>
+          <MenuItem onClick={handleMenuClose} sx={{ color: "error.main" }}>
+            <Trash2 size={16} style={{ marginRight: 8 }} />
+            Delete User
+          </MenuItem>
+        </Menu>
+      </Container>
     </Box>
   )
 }
