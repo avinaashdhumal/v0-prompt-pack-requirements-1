@@ -219,7 +219,11 @@ export default function UsersPage() {
   const complianceOfficers = mockUsers.filter((user) => user.role === "compliance_officer").length
 
   return (
-    <Box sx={{ flexGrow: 1, bgcolor: "background.default", minHeight: "100vh" }}>
+    <Box sx={{ 
+      flexGrow: 1, 
+      minHeight: "100vh",
+      background: "linear-gradient(135deg, rgba(69, 56, 202, 0.03) 0%, transparent 50%, rgba(16, 185, 129, 0.03) 100%)",
+    }}>
       <Container maxWidth="xl" sx={{ py: 4 }}>
         {/* Header */}
         <motion.div
