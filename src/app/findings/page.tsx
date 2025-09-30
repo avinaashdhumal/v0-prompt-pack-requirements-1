@@ -333,6 +333,7 @@ export default function FindingsPage() {
                 <Card
                   sx={{
                     height: "100%",
+                    minHeight: 160,
                     borderRadius: 3,
                     border: "1px solid",
                     borderColor: "divider",
@@ -345,10 +346,10 @@ export default function FindingsPage() {
                     },
                   }}
                 >
-                  <CardContent sx={{ p: 3 }}>
-                    <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                      <Box>
-                        <Typography color="text.secondary" gutterBottom variant="body2" sx={{ fontWeight: 500 }}>
+                  <CardContent sx={{ p: 3, height: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+                    <Box sx={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between" }}>
+                      <Box sx={{ flex: 1 }}>
+                        <Typography color="text.secondary" variant="body2" sx={{ fontWeight: 500, mb: 1.5 }}>
                           {stat.label}
                         </Typography>
                         <Typography variant="h3" sx={{ fontWeight: 700, color: stat.color }}>
@@ -361,6 +362,7 @@ export default function FindingsPage() {
                           borderRadius: 2,
                           bgcolor: stat.bgColor,
                           display: "inline-flex",
+                          flexShrink: 0,
                         }}
                       >
                         <stat.icon style={{ color: stat.color }} />

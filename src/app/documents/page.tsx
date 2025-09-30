@@ -128,6 +128,7 @@ export default function DocumentsPage() {
                 <Card
                   sx={{
                     height: "100%",
+                    minHeight: 160,
                     borderRadius: 3,
                     border: "1px solid",
                     borderColor: "divider",
@@ -140,25 +141,28 @@ export default function DocumentsPage() {
                     },
                   }}
                 >
-                  <CardContent sx={{ p: 3 }}>
-                    <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", mb: 2 }}>
+                  <CardContent sx={{ p: 3, height: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+                    <Box sx={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", mb: 2 }}>
+                      <Box sx={{ flex: 1 }}>
+                        <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500, mb: 1.5 }}>
+                          {stat.label}
+                        </Typography>
+                        <Typography variant="h3" sx={{ fontWeight: 700, color: stat.color }}>
+                          {stat.value}
+                        </Typography>
+                      </Box>
                       <Box
                         sx={{
                           p: 1.5,
                           borderRadius: 2,
                           bgcolor: stat.bgColor,
                           display: "inline-flex",
+                          flexShrink: 0,
                         }}
                       >
                         <stat.icon size={24} style={{ color: stat.color }} />
                       </Box>
                     </Box>
-                    <Typography variant="h3" sx={{ fontWeight: 700, color: stat.color, mb: 0.5 }}>
-                      {stat.value}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500 }}>
-                      {stat.label}
-                    </Typography>
                   </CardContent>
                 </Card>
               </motion.div>

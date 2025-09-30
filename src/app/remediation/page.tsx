@@ -272,6 +272,7 @@ export default function RemediationPage() {
                 <Card
                   sx={{
                     height: "100%",
+                    minHeight: 160,
                     borderRadius: 3,
                     border: "1px solid",
                     borderColor: "divider",
@@ -284,10 +285,10 @@ export default function RemediationPage() {
                     },
                   }}
                 >
-                  <CardContent sx={{ p: 3 }}>
-                    <Box display="flex" alignItems="center" justifyContent="space-between">
-                      <Box>
-                        <Typography color="textSecondary" gutterBottom variant="body2" sx={{ fontWeight: 500 }}>
+                  <CardContent sx={{ p: 3, height: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+                    <Box display="flex" alignItems="flex-start" justifyContent="space-between">
+                      <Box sx={{ flex: 1 }}>
+                        <Typography color="textSecondary" variant="body2" sx={{ fontWeight: 500, mb: 1.5 }}>
                           {stat.title}
                         </Typography>
                         <Typography variant="h3" sx={{ fontWeight: 700, color: stat.color }}>
@@ -300,6 +301,7 @@ export default function RemediationPage() {
                           borderRadius: 2,
                           bgcolor: stat.bgColor,
                           display: "inline-flex",
+                          flexShrink: 0,
                         }}
                       >
                         <stat.icon style={{ color: stat.color }} />

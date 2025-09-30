@@ -103,6 +103,7 @@ export function DashboardContent() {
     >
       <Card sx={{ 
         height: "100%",
+        minHeight: 160,
         borderRadius: 3,
         border: "1px solid",
         borderColor: "divider",
@@ -114,24 +115,15 @@ export function DashboardContent() {
           boxShadow: `0 8px 24px rgba(69, 56, 202, 0.15)`,
         },
       }}>
-        <CardContent sx={{ p: 3 }}>
-          <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-            <Box>
-              <Typography color="text.secondary" gutterBottom variant="body2" sx={{ fontWeight: 500 }}>
+        <CardContent sx={{ p: 3, height: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+          <Box sx={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", mb: 2 }}>
+            <Box sx={{ flex: 1 }}>
+              <Typography color="text.secondary" variant="body2" sx={{ fontWeight: 500, mb: 1.5 }}>
                 {title}
               </Typography>
               <Typography variant="h3" component="div" color={`${color}.main`} sx={{ fontWeight: 700, mb: 1 }}>
                 {typeof value === "number" ? value.toLocaleString() : value}
               </Typography>
-              {change !== undefined && (
-                <Box sx={{ display: "flex", alignItems: "center" }}>
-                  <TrendingUp size={16} color={change > 0 ? "#10B981" : "#EF4444"} />
-                  <Typography variant="body2" color={change > 0 ? "success.main" : "error.main"} sx={{ ml: 0.5, fontWeight: 600 }}>
-                    {change > 0 ? "+" : ""}
-                    {change}%
-                  </Typography>
-                </Box>
-              )}
             </Box>
             <Box sx={{
               p: 1.5,
@@ -139,10 +131,20 @@ export function DashboardContent() {
               bgcolor: `${color}.main`,
               color: "white",
               display: "inline-flex",
+              flexShrink: 0,
             }}>
               <Icon size={24} />
             </Box>
           </Box>
+          {change !== undefined && (
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <TrendingUp size={16} color={change > 0 ? "#10B981" : "#EF4444"} />
+              <Typography variant="body2" color={change > 0 ? "success.main" : "error.main"} sx={{ ml: 0.5, fontWeight: 600 }}>
+                {change > 0 ? "+" : ""}
+                {change}%
+              </Typography>
+            </Box>
+          )}
         </CardContent>
       </Card>
     </motion.div>
@@ -248,10 +250,7 @@ export function DashboardContent() {
   )
 
   return (
-    <Box sx={{ 
-      minHeight: "100vh",
-      background: "linear-gradient(135deg, rgba(69, 56, 202, 0.03) 0%, transparent 50%, rgba(16, 185, 129, 0.03) 100%)",
-    }}>
+    <Box>
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}

@@ -45,6 +45,7 @@ export default function AssessmentsPage() {
       icon: FileCheck,
       color: "primary.main",
       bgColor: "rgba(69, 56, 202, 0.1)",
+      gradient: "linear-gradient(135deg, rgba(69, 56, 202, 0.05) 0%, transparent 100%)",
     },
     {
       label: "Completed",
@@ -52,6 +53,7 @@ export default function AssessmentsPage() {
       icon: TrendingUp,
       color: "success.main",
       bgColor: "rgba(16, 185, 129, 0.1)",
+      gradient: "linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, transparent 100%)",
     },
     {
       label: "In Progress",
@@ -59,6 +61,7 @@ export default function AssessmentsPage() {
       icon: Activity,
       color: "warning.main",
       bgColor: "rgba(245, 158, 11, 0.1)",
+      gradient: "linear-gradient(135deg, rgba(245, 158, 11, 0.05) 0%, transparent 100%)",
     },
     {
       label: "Drafts",
@@ -66,6 +69,7 @@ export default function AssessmentsPage() {
       icon: AlertCircle,
       color: "text.secondary",
       bgColor: "rgba(0, 0, 0, 0.05)",
+      gradient: "linear-gradient(135deg, rgba(0, 0, 0, 0.02) 0%, transparent 100%)",
     },
   ]
 
@@ -137,9 +141,11 @@ export default function AssessmentsPage() {
                 <Card
                   sx={{
                     height: "100%",
+                    minHeight: 160,
                     borderRadius: 3,
                     border: "1px solid",
                     borderColor: "divider",
+                    background: stat.gradient,
                     transition: "all 0.3s ease",
                     "&:hover": {
                       borderColor: stat.color,
@@ -148,25 +154,28 @@ export default function AssessmentsPage() {
                     },
                   }}
                 >
-                  <CardContent sx={{ p: 3 }}>
-                    <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", mb: 2 }}>
+                  <CardContent sx={{ p: 3, height: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+                    <Box sx={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", mb: 2 }}>
+                      <Box sx={{ flex: 1 }}>
+                        <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500, mb: 1.5 }}>
+                          {stat.label}
+                        </Typography>
+                        <Typography variant="h3" sx={{ fontWeight: 700, color: stat.color }}>
+                          {stat.value}
+                        </Typography>
+                      </Box>
                       <Box
                         sx={{
                           p: 1.5,
                           borderRadius: 2,
                           bgcolor: stat.bgColor,
                           display: "inline-flex",
+                          flexShrink: 0,
                         }}
                       >
                         <stat.icon size={24} style={{ color: stat.color }} />
                       </Box>
                     </Box>
-                    <Typography variant="h3" sx={{ fontWeight: 700, color: stat.color, mb: 0.5 }}>
-                      {stat.value}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500 }}>
-                      {stat.label}
-                    </Typography>
                   </CardContent>
                 </Card>
               </motion.div>
