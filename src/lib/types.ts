@@ -147,3 +147,166 @@ export interface PackSearchParams {
   page?: string
   limit?: string
 }
+
+// ============================================
+// COMPLIANCE HEALTHCHECK MVP DATA MODELS
+// ============================================
+
+// Document & Processing
+export interface Document {
+  id: string
+  tenantId: string
+  name: string
+  type: "regulation" | "policy" | "contract" | "vendor_doc" | "audit_letter"
+  storageUri: string
+  hash: string
+  pages: number
+  status: "uploading" | "processing" | "ready" | "failed"
+  createdAt: string
+  updatedAt: string
+}
+
+export interface DocumentChunk {
+  id: string
+  documentId: string
+  page: number
+  sectionPath: string
+  text: string
+  embedding?: number[]
+  refs: Record<string, any>
+}
+
+// Assessment & Findings
+export interface Assessment {
+  id: string
+  tenantId: string
+  name: string
+  promptPack: string[]
+  documentIds: string[]
+  jurisdiction?: string
+  status: "draft" | "running" | "completed" | "failed"
+  createdAt: string
+  completedAt?: string
+  baselineId?: string
+}
+
+export interface Finding {
+  id: string
+  assessmentId: string
+  kind: "risk" | "issue" | "requirement_gap"
+  title: string
+  description: string
+  severity: "low" | "medium" | "high" | "critical"
+  likelihood?: "low" | "medium" | "high"
+  impactArea: "Financial" | "Regulatory" | "Operational" | "Reputation" | "Privacy"
+  refs: DocumentReference[]
+  citationConfidence: number
+}
+
+export interface Requirement {
+  id: string
+  assessmentId: string
+  controlFamily: "Access" | "Data" | "Governance" | "IR" | "TPRM" | "BCP"
+  controlIdExt?: string
+  statement: string
+  mustShould: "MUST" | "SHOULD"
+  testProcedures: string[]
+  refs: DocumentReference[]
+  status?: "KNOWN" | "UNCERTAIN"
+}
+
+export interface Obligation {
+  id: string
+  assessmentId: string
+  legalText: string
+  jurisdiction: string
+  refs: DocumentReference[]
+}
+
+export interface Penalty {
+  id: string
+  assessmentId: string
+  text: string
+  penaltyType: "fine" | "sanction" | "license" | "civil" | "criminal"
+  maxAmount?: string
+  conditions: string
+  refs: DocumentReference[]
+}
+
+export interface Timeline {
+  id: string
+  assessmentId: string
+  dateType: string
+  deadline: string
+  trigger: string
+  refs: DocumentReference[]
+}
+
+// Attestation & Evidence
+export interface Attestation {
+  id: string
+  subjectId: string // finding_id or requirement_id
+  subjectType: "finding" | "requirement"
+  status: "Have" | "Partial" | "No"
+  evidenceUri?: string
+  owner?: string
+  notes?: string
+  createdAt: string
+  updatedAt: string
+}
+
+// Scoring
+export interface Score {
+  id: string
+  assessmentId: string
+  totalScore: number
+  residualRisk: "Low" | "Medium" | "High" | "Critical"
+  familyBreakdown: Record<string, number>
+  topGaps: string[]
+  quickWins: string[]
+  clarifications: string[]
+}
+
+// Remediation Actions
+export interface RemediationAction {
+  id: string
+  assessmentId: string
+  title: string
+  priority: "P0" | "P1" | "P2"
+  owner: string
+  effort: "S" | "M" | "L"
+  dependency?: string
+  dueBy?: string
+  mappedSolution?: string
+  status: "pending" | "in_progress" | "completed"
+  refs: DocumentReference[]
+}
+
+// Audit Trail
+export interface AuditLog {
+  id: string
+  tenantId: string
+  actor: string
+  action: string
+  target: string
+  timestamp: string
+  details: Record<string, any>
+}
+
+// Utility Types
+export interface DocumentReference {
+  doc: string
+  page: number
+  clause?: string
+  excerpt?: string
+}
+
+export interface AssessmentSummary {
+  assessmentId: string
+  scoreTotal: number
+  residualRisk: "Low" | "Medium" | "High" | "Critical"
+  familyBreakdown: Record<string, number>
+  topGaps: string[]
+  quickWins: string[]
+  clarifications: string[]
+}

@@ -192,7 +192,6 @@ const StatCard = ({ title, value, icon: Icon, color = "primary" }) => (
   </motion.div>
 )
 
-// Locale-stable date formatter
 const formatDate = (iso: string) =>
   new Intl.DateTimeFormat("en-GB", { day: "2-digit", month: "2-digit", year: "numeric" }).format(new Date(iso))
 
@@ -247,7 +246,7 @@ export default function UsersPage() {
                 />
               </Box>
               <Typography variant="body1" color="text.secondary">
-                Manage user accounts, roles, and permissions for your organization.
+                Manage user accounts, roles, and permissions for your compliance platform.
               </Typography>
             </Box>
             <Button
