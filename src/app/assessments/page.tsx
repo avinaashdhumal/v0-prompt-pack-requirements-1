@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { motion } from "framer-motion"
 import {
   Box,
   Container,
@@ -13,8 +14,9 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  Chip,
 } from "@mui/material"
-import { Plus } from "lucide-react"
+import { Plus, Sparkles, TrendingUp, Activity, FileCheck, AlertCircle } from "lucide-react"
 import Link from "next/link"
 import { useAssessments } from "../../lib/hooks/useAssessments"
 import { AssessmentWizard } from "../../components/assessments/AssessmentWizard"
@@ -36,94 +38,183 @@ export default function AssessmentsPage() {
 
   const stats = getStatusStats()
 
+  const statCards = [
+    {
+      label: "Total Assessments",
+      value: stats.total,
+      icon: FileCheck,
+      color: "primary.main",
+      bgColor: "rgba(69, 56, 202, 0.1)",
+    },
+    {
+      label: "Completed",
+      value: stats.completed,
+      icon: TrendingUp,
+      color: "success.main",
+      bgColor: "rgba(16, 185, 129, 0.1)",
+    },
+    {
+      label: "In Progress",
+      value: stats.running,
+      icon: Activity,
+      color: "warning.main",
+      bgColor: "rgba(245, 158, 11, 0.1)",
+    },
+    {
+      label: "Drafts",
+      value: stats.draft,
+      icon: AlertCircle,
+      color: "text.secondary",
+      bgColor: "rgba(0, 0, 0, 0.05)",
+    },
+  ]
+
   return (
-    <Box sx={{ flexGrow: 1, p: 3 }}>
-      {/* Page Header */}
-      <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", mb: 3 }}>
-        <Box>
-          <Typography variant="h4" component="h1" gutterBottom>
-            Compliance Assessments
-          </Typography>
-          <Typography variant="body1" color="text.secondary">
-            Create and manage AI-powered compliance assessments using regulatory prompt packs.
-          </Typography>
-        </Box>
-        <Button variant="contained" startIcon={<Plus />} onClick={() => setWizardOpen(true)} size="large">
-          New Assessment
-        </Button>
-      </Box>
-
-      {/* Stats Cards */}
-      <Grid container spacing={3} sx={{ mb: 4 }}>
-        <Grid item xs={12} sm={6} md={3}>
-          <Card>
-            <CardContent sx={{ textAlign: "center" }}>
-              <Typography variant="h4" color="primary" sx={{ fontWeight: 700 }}>
-                {stats.total}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Total Assessments
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <Card>
-            <CardContent sx={{ textAlign: "center" }}>
-              <Typography variant="h4" color="success.main" sx={{ fontWeight: 700 }}>
-                {stats.completed}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Completed
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <Card>
-            <CardContent sx={{ textAlign: "center" }}>
-              <Typography variant="h4" color="warning.main" sx={{ fontWeight: 700 }}>
-                {stats.running}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Running
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <Card>
-            <CardContent sx={{ textAlign: "center" }}>
-              <Typography variant="h4" color="text.secondary" sx={{ fontWeight: 700 }}>
-                {stats.draft}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Drafts
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
-
-      {/* Assessment List */}
-      <Card>
-        <CardContent>
-          <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", mb: 3 }}>
-            <Typography variant="h6" sx={{ fontWeight: 600 }}>
-              Recent Assessments
-            </Typography>
-            <Button variant="outlined" startIcon={<Plus />} onClick={() => setWizardOpen(true)} size="small">
-              Create New
-            </Button>
+    <Box sx={{ flexGrow: 1, bgcolor: "background.default", minHeight: "100vh" }}>
+      <Container maxWidth="xl" sx={{ py: 4 }}>
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <Box sx={{ mb: 4 }}>
+            <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", mb: 2 }}>
+              <Box>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}>
+                  <Typography variant="h4" component="h1" sx={{ fontWeight: 700 }}>
+                    Compliance Assessments
+                  </Typography>
+                  <Chip
+                    icon={<Sparkles size={14} />}
+                    label="AI-Powered"
+                    size="small"
+                    sx={{
+                      bgcolor: "rgba(16, 185, 129, 0.1)",
+                      color: "success.main",
+                      fontWeight: 600,
+                      borderRadius: 2,
+                    }}
+                  />
+                </Box>
+                <Typography variant="body1" color="text.secondary" sx={{ maxWidth: 700 }}>
+                  Create and manage AI-powered compliance assessments using regulatory prompt packs. Upload
+                  documents, select frameworks, and get instant gap analysis with remediation plans.
+                </Typography>
+              </Box>
+              <Button
+                variant="contained"
+                startIcon={<Plus />}
+                onClick={() => setWizardOpen(true)}
+                size="large"
+                sx={{
+                  px: 3,
+                  py: 1.5,
+                  borderRadius: 2,
+                  textTransform: "none",
+                  fontWeight: 600,
+                  boxShadow: "0 4px 12px rgba(69, 56, 202, 0.25)",
+                  "&:hover": {
+                    boxShadow: "0 6px 20px rgba(69, 56, 202, 0.35)",
+                  },
+                }}
+              >
+                New Assessment
+              </Button>
+            </Box>
           </Box>
-          <AssessmentList 
-            assessments={assessments} 
-            loading={loading} 
-            onRunAssessment={runAssessment}
-            onDeleteAssessment={deleteAssessment}
-          />
-        </CardContent>
-      </Card>
+        </motion.div>
+
+        {/* Stats Cards */}
+        <Grid container spacing={3} sx={{ mb: 4 }}>
+          {statCards.map((stat, index) => (
+            <Grid item xs={12} sm={6} md={3} key={stat.label}>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+              >
+                <Card
+                  sx={{
+                    height: "100%",
+                    borderRadius: 3,
+                    border: "1px solid",
+                    borderColor: "divider",
+                    transition: "all 0.3s ease",
+                    "&:hover": {
+                      borderColor: stat.color,
+                      boxShadow: `0 8px 24px ${stat.bgColor}`,
+                      transform: "translateY(-4px)",
+                    },
+                  }}
+                >
+                  <CardContent sx={{ p: 3 }}>
+                    <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", mb: 2 }}>
+                      <Box
+                        sx={{
+                          p: 1.5,
+                          borderRadius: 2,
+                          bgcolor: stat.bgColor,
+                          display: "inline-flex",
+                        }}
+                      >
+                        <stat.icon size={24} style={{ color: stat.color }} />
+                      </Box>
+                    </Box>
+                    <Typography variant="h3" sx={{ fontWeight: 700, color: stat.color, mb: 0.5 }}>
+                      {stat.value}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500 }}>
+                      {stat.label}
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            </Grid>
+          ))}
+        </Grid>
+
+        {/* Assessment List */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+        >
+          <Card sx={{ borderRadius: 3, border: "1px solid", borderColor: "divider" }}>
+            <CardContent sx={{ p: 4 }}>
+              <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", mb: 3 }}>
+                <Box>
+                  <Typography variant="h6" sx={{ fontWeight: 600, mb: 0.5 }}>
+                    Recent Assessments
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    View and manage your compliance assessment history
+                  </Typography>
+                </Box>
+                <Button
+                  variant="outlined"
+                  startIcon={<Plus />}
+                  onClick={() => setWizardOpen(true)}
+                  size="small"
+                  sx={{
+                    textTransform: "none",
+                    fontWeight: 600,
+                    borderRadius: 2,
+                  }}
+                >
+                  Create New
+                </Button>
+              </Box>
+              <AssessmentList
+                assessments={assessments}
+                loading={loading}
+                onRunAssessment={runAssessment}
+                onDeleteAssessment={deleteAssessment}
+              />
+            </CardContent>
+          </Card>
+        </motion.div>
+      </Container>
 
       {/* Assessment Wizard Dialog */}
       <Dialog
@@ -131,11 +222,22 @@ export default function AssessmentsPage() {
         onClose={() => setWizardOpen(false)}
         maxWidth="md"
         fullWidth
-        PaperProps={{ sx: { borderRadius: 2 } }}
+        PaperProps={{
+          sx: {
+            borderRadius: 3,
+            boxShadow: "0 24px 48px rgba(0, 0, 0, 0.15)",
+          },
+        }}
       >
-        <DialogTitle>
-          <Typography variant="h6" sx={{ fontWeight: 600 }}>
-            Create New Assessment
+        <DialogTitle sx={{ pb: 2 }}>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            <Sparkles size={20} style={{ color: "var(--color-primary)" }} />
+            <Typography variant="h6" sx={{ fontWeight: 600 }}>
+              Create New Assessment
+            </Typography>
+          </Box>
+          <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+            Select your compliance framework and documents to begin AI-powered analysis
           </Typography>
         </DialogTitle>
         <DialogContent>
@@ -146,8 +248,10 @@ export default function AssessmentsPage() {
             }}
           />
         </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setWizardOpen(false)}>Cancel</Button>
+        <DialogActions sx={{ px: 3, pb: 3 }}>
+          <Button onClick={() => setWizardOpen(false)} sx={{ textTransform: "none" }}>
+            Cancel
+          </Button>
         </DialogActions>
       </Dialog>
     </Box>
