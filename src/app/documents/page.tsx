@@ -31,33 +31,33 @@ export default function DocumentsPage() {
       label: "Total Documents",
       value: documents.length,
       icon: FileText,
-      color: "primary.main",
-      bgColor: "rgba(69, 56, 202, 0.1)",
-      gradient: "linear-gradient(135deg, rgba(69, 56, 202, 0.05) 0%, transparent 100%)",
+      color: "#2563eb",
+      bgColor: "rgba(37, 99, 235, 0.1)",
+      gradient: "linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(37, 99, 235, 0.02) 100%)",
     },
     {
       label: "Ready for Analysis",
       value: documents.filter((d) => d.status === "ready").length,
       icon: CheckCircle2,
-      color: "success.main",
+      color: "#10b981",
       bgColor: "rgba(16, 185, 129, 0.1)",
-      gradient: "linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, transparent 100%)",
+      gradient: "linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.02) 100%)",
     },
     {
       label: "Processing",
       value: documents.filter((d) => d.status === "processing").length,
       icon: Clock,
-      color: "warning.main",
+      color: "#f59e0b",
       bgColor: "rgba(245, 158, 11, 0.1)",
-      gradient: "linear-gradient(135deg, rgba(245, 158, 11, 0.05) 0%, transparent 100%)",
+      gradient: "linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(245, 158, 11, 0.02) 100%)",
     },
     {
       label: "Total Pages",
       value: documents.reduce((sum, d) => sum + (d.pages || 0), 0),
       icon: Files,
-      color: "info.main",
-      bgColor: "rgba(59, 130, 246, 0.1)",
-      gradient: "linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, transparent 100%)",
+      color: "#8b5cf6",
+      bgColor: "rgba(139, 92, 246, 0.1)",
+      gradient: "linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(139, 92, 246, 0.02) 100%)",
     },
   ]
 
@@ -65,7 +65,7 @@ export default function DocumentsPage() {
     <Box sx={{ 
       flexGrow: 1, 
       minHeight: "100vh",
-      background: "linear-gradient(135deg, rgba(69, 56, 202, 0.03) 0%, transparent 50%, rgba(16, 185, 129, 0.03) 100%)",
+      background: "linear-gradient(135deg, rgba(37, 99, 235, 0.03) 0%, transparent 50%, rgba(16, 185, 129, 0.03) 100%)",
     }}>
       <Container maxWidth="xl" sx={{ py: 4 }}>
         {/* Page Header */}
@@ -86,9 +86,10 @@ export default function DocumentsPage() {
                   size="small"
                   sx={{
                     bgcolor: "rgba(16, 185, 129, 0.1)",
-                    color: "success.main",
+                    color: "#10b981",
                     fontWeight: 600,
                     borderRadius: 2,
+                    border: "1px solid rgba(16, 185, 129, 0.2)",
                   }}
                 />
               </Box>
@@ -106,11 +107,13 @@ export default function DocumentsPage() {
                 py: 1.5,
                 borderRadius: 2,
                 fontWeight: 600,
-                background: "linear-gradient(135deg, rgba(69, 56, 202, 1) 0%, rgba(16, 185, 129, 1) 100%)",
-                boxShadow: "0 4px 12px rgba(69, 56, 202, 0.25)",
+                background: "linear-gradient(135deg, #2563eb 0%, #10b981 100%)",
+                boxShadow: "0 4px 12px rgba(37, 99, 235, 0.25)",
+                transition: "all 0.3s",
                 "&:hover": {
-                  background: "linear-gradient(135deg, rgba(59, 46, 172, 1) 0%, rgba(14, 165, 115, 1) 100%)",
-                  boxShadow: "0 6px 20px rgba(69, 56, 202, 0.35)",
+                  background: "linear-gradient(135deg, #1d4ed8 0%, #059669 100%)",
+                  boxShadow: "0 8px 24px rgba(37, 99, 235, 0.35)",
+                  transform: "translateY(-2px)",
                 },
               }}
             >
@@ -162,6 +165,8 @@ export default function DocumentsPage() {
                           display: "inline-flex",
                           flexShrink: 0,
                           ml: 2,
+                          border: "1px solid",
+                          borderColor: `${stat.color}20`,
                         }}
                       >
                         <stat.icon size={24} style={{ color: stat.color }} />
@@ -180,7 +185,16 @@ export default function DocumentsPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.4 }}
         >
-          <Card sx={{ borderRadius: 3, border: "1px solid", borderColor: "divider", mb: 4 }}>
+          <Card sx={{ 
+            borderRadius: 3, 
+            border: "1px solid", 
+            borderColor: "divider", 
+            mb: 4,
+            transition: "all 0.3s",
+            "&:hover": {
+              boxShadow: "0 8px 24px rgba(0, 0, 0, 0.08)",
+            }
+          }}>
             <CardContent sx={{ p: 4 }}>
               <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", mb: 3 }}>
                 <Box>
@@ -199,6 +213,12 @@ export default function DocumentsPage() {
                   sx={{
                     borderRadius: 2,
                     fontWeight: 600,
+                    borderWidth: 2,
+                    transition: "all 0.3s",
+                    "&:hover": {
+                      borderWidth: 2,
+                      transform: "translateY(-2px)",
+                    }
                   }}
                 >
                   Upload
@@ -215,7 +235,15 @@ export default function DocumentsPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.6 }}
         >
-          <Card sx={{ borderRadius: 3, border: "1px solid", borderColor: "divider" }}>
+          <Card sx={{ 
+            borderRadius: 3, 
+            border: "1px solid", 
+            borderColor: "divider",
+            transition: "all 0.3s",
+            "&:hover": {
+              boxShadow: "0 8px 24px rgba(0, 0, 0, 0.08)",
+            }
+          }}>
             <CardContent sx={{ p: 4 }}>
               <Box sx={{ mb: 2 }}>
                 <Typography variant="h6" sx={{ fontWeight: 600, mb: 0.5 }}>
@@ -246,7 +274,14 @@ export default function DocumentsPage() {
       >
         <DialogTitle>
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            <Sparkles size={20} style={{ color: "var(--color-primary)" }} />
+            <Box sx={{ 
+              p: 1, 
+              borderRadius: 2, 
+              bgcolor: "rgba(16, 185, 129, 0.1)",
+              display: "inline-flex"
+            }}>
+              <Sparkles size={20} style={{ color: "#10b981" }} />
+            </Box>
             <Typography variant="h6" sx={{ fontWeight: 600 }}>
               Upload Document
             </Typography>
@@ -265,7 +300,13 @@ export default function DocumentsPage() {
           />
         </DialogContent>
         <DialogActions sx={{ px: 3, pb: 3 }}>
-          <Button onClick={() => setUploadDialogOpen(false)} sx={{ textTransform: "none" }}>
+          <Button 
+            onClick={() => setUploadDialogOpen(false)} 
+            sx={{ 
+              textTransform: "none",
+              fontWeight: 600
+            }}
+          >
             Cancel
           </Button>
         </DialogActions>
