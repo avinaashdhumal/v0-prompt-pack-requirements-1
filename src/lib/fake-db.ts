@@ -5,7 +5,7 @@
 
 import type { Assessment } from "./slices/assessmentsSlice"
 import type { Document } from "./slices/documentsSlice"
-import type { PromptPack, Prompt, Rating } from "./types"
+import type { PromptPack, Prompt, Rating, Requirement, Control, Obligation, Penalty, Timeline, Attestation, Clarification, AuditLog } from "./types"
 
 // Storage keys
 const STORAGE_KEYS = {
@@ -16,6 +16,14 @@ const STORAGE_KEYS = {
   RATINGS: "fake_db_ratings",
   FINDINGS: "fake_db_findings",
   REMEDIATION: "fake_db_remediation",
+  REQUIREMENTS: "fake_db_requirements",
+  CONTROLS: "fake_db_controls",
+  OBLIGATIONS: "fake_db_obligations",
+  PENALTIES: "fake_db_penalties",
+  TIMELINES: "fake_db_timelines",
+  ATTESTATIONS: "fake_db_attestations",
+  CLARIFICATIONS: "fake_db_clarifications",
+  AUDIT_LOGS: "fake_db_audit_logs",
 }
 
 // Helper functions
@@ -368,6 +376,427 @@ class FakeDatabase {
     const remediations = getFromStorage(STORAGE_KEYS.REMEDIATION, [])
     const filtered = remediations.filter((r: any) => r.id !== id)
     saveToStorage(STORAGE_KEYS.REMEDIATION, filtered)
+  }
+
+  // REQUIREMENTS CRUD
+  async getRequirements(assessmentId?: string): Promise<Requirement[]> {
+    await this.simulateDelay()
+    const requirements = getFromStorage<Requirement>(STORAGE_KEYS.REQUIREMENTS, [])
+    return assessmentId ? requirements.filter(r => r.assessmentId === assessmentId) : requirements
+  }
+
+  async getRequirement(id: string): Promise<Requirement | null> {
+    await this.simulateDelay()
+    const requirements = getFromStorage<Requirement>(STORAGE_KEYS.REQUIREMENTS, [])
+    return requirements.find(r => r.id === id) || null
+  }
+
+  async createRequirement(data: Omit<Requirement, "id" | "tenantId" | "createdAt" | "updatedAt">): Promise<Requirement> {
+    await this.simulateDelay()
+    const requirements = getFromStorage<Requirement>(STORAGE_KEYS.REQUIREMENTS, [])
+    const newRequirement: Requirement = {
+      ...data,
+      id: Date.now().toString(),
+      tenantId: "tenant_1",
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    }
+    requirements.push(newRequirement)
+    saveToStorage(STORAGE_KEYS.REQUIREMENTS, requirements)
+    await this.createAuditLog("system", "CREATE", "requirement", newRequirement.id, { requirement: newRequirement })
+    return newRequirement
+  }
+
+  async updateRequirement(id: string, updates: Partial<Requirement>): Promise<Requirement> {
+    await this.simulateDelay()
+    const requirements = getFromStorage<Requirement>(STORAGE_KEYS.REQUIREMENTS, [])
+    const index = requirements.findIndex(r => r.id === id)
+    if (index === -1) throw new Error("Requirement not found")
+    
+    const oldData = { ...requirements[index] }
+    requirements[index] = { ...requirements[index], ...updates, updatedAt: new Date().toISOString() }
+    saveToStorage(STORAGE_KEYS.REQUIREMENTS, requirements)
+    await this.createAuditLog("system", "UPDATE", "requirement", id, { before: oldData, after: requirements[index] })
+    return requirements[index]
+  }
+
+  async deleteRequirement(id: string): Promise<void> {
+    await this.simulateDelay()
+    const requirements = getFromStorage<Requirement>(STORAGE_KEYS.REQUIREMENTS, [])
+    const requirement = requirements.find(r => r.id === id)
+    const filtered = requirements.filter(r => r.id !== id)
+    saveToStorage(STORAGE_KEYS.REQUIREMENTS, filtered)
+    if (requirement) {
+      await this.createAuditLog("system", "DELETE", "requirement", id, { requirement })
+    }
+  }
+
+  // CONTROLS CRUD
+  async getControls(assessmentId?: string): Promise<Control[]> {
+    await this.simulateDelay()
+    const controls = getFromStorage<Control>(STORAGE_KEYS.CONTROLS, [])
+    return assessmentId ? controls.filter(c => c.assessmentId === assessmentId) : controls
+  }
+
+  async getControl(id: string): Promise<Control | null> {
+    await this.simulateDelay()
+    const controls = getFromStorage<Control>(STORAGE_KEYS.CONTROLS, [])
+    return controls.find(c => c.id === id) || null
+  }
+
+  async createControl(data: Omit<Control, "id" | "tenantId" | "createdAt" | "updatedAt">): Promise<Control> {
+    await this.simulateDelay()
+    const controls = getFromStorage<Control>(STORAGE_KEYS.CONTROLS, [])
+    const newControl: Control = {
+      ...data,
+      id: Date.now().toString(),
+      tenantId: "tenant_1",
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    }
+    controls.push(newControl)
+    saveToStorage(STORAGE_KEYS.CONTROLS, controls)
+    await this.createAuditLog("system", "CREATE", "control", newControl.id, { control: newControl })
+    return newControl
+  }
+
+  async updateControl(id: string, updates: Partial<Control>): Promise<Control> {
+    await this.simulateDelay()
+    const controls = getFromStorage<Control>(STORAGE_KEYS.CONTROLS, [])
+    const index = controls.findIndex(c => c.id === id)
+    if (index === -1) throw new Error("Control not found")
+    
+    const oldData = { ...controls[index] }
+    controls[index] = { ...controls[index], ...updates, updatedAt: new Date().toISOString() }
+    saveToStorage(STORAGE_KEYS.CONTROLS, controls)
+    await this.createAuditLog("system", "UPDATE", "control", id, { before: oldData, after: controls[index] })
+    return controls[index]
+  }
+
+  async deleteControl(id: string): Promise<void> {
+    await this.simulateDelay()
+    const controls = getFromStorage<Control>(STORAGE_KEYS.CONTROLS, [])
+    const control = controls.find(c => c.id === id)
+    const filtered = controls.filter(c => c.id !== id)
+    saveToStorage(STORAGE_KEYS.CONTROLS, filtered)
+    if (control) {
+      await this.createAuditLog("system", "DELETE", "control", id, { control })
+    }
+  }
+
+  // OBLIGATIONS CRUD
+  async getObligations(assessmentId?: string): Promise<Obligation[]> {
+    await this.simulateDelay()
+    const obligations = getFromStorage<Obligation>(STORAGE_KEYS.OBLIGATIONS, [])
+    return assessmentId ? obligations.filter(o => o.assessmentId === assessmentId) : obligations
+  }
+
+  async getObligation(id: string): Promise<Obligation | null> {
+    await this.simulateDelay()
+    const obligations = getFromStorage<Obligation>(STORAGE_KEYS.OBLIGATIONS, [])
+    return obligations.find(o => o.id === id) || null
+  }
+
+  async createObligation(data: Omit<Obligation, "id" | "tenantId" | "createdAt" | "updatedAt">): Promise<Obligation> {
+    await this.simulateDelay()
+    const obligations = getFromStorage<Obligation>(STORAGE_KEYS.OBLIGATIONS, [])
+    const newObligation: Obligation = {
+      ...data,
+      id: Date.now().toString(),
+      tenantId: "tenant_1",
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    }
+    obligations.push(newObligation)
+    saveToStorage(STORAGE_KEYS.OBLIGATIONS, obligations)
+    await this.createAuditLog("system", "CREATE", "obligation", newObligation.id, { obligation: newObligation })
+    return newObligation
+  }
+
+  async updateObligation(id: string, updates: Partial<Obligation>): Promise<Obligation> {
+    await this.simulateDelay()
+    const obligations = getFromStorage<Obligation>(STORAGE_KEYS.OBLIGATIONS, [])
+    const index = obligations.findIndex(o => o.id === id)
+    if (index === -1) throw new Error("Obligation not found")
+    
+    const oldData = { ...obligations[index] }
+    obligations[index] = { ...obligations[index], ...updates, updatedAt: new Date().toISOString() }
+    saveToStorage(STORAGE_KEYS.OBLIGATIONS, obligations)
+    await this.createAuditLog("system", "UPDATE", "obligation", id, { before: oldData, after: obligations[index] })
+    return obligations[index]
+  }
+
+  async deleteObligation(id: string): Promise<void> {
+    await this.simulateDelay()
+    const obligations = getFromStorage<Obligation>(STORAGE_KEYS.OBLIGATIONS, [])
+    const obligation = obligations.find(o => o.id === id)
+    const filtered = obligations.filter(o => o.id !== id)
+    saveToStorage(STORAGE_KEYS.OBLIGATIONS, filtered)
+    if (obligation) {
+      await this.createAuditLog("system", "DELETE", "obligation", id, { obligation })
+    }
+  }
+
+  // PENALTIES CRUD
+  async getPenalties(assessmentId?: string): Promise<Penalty[]> {
+    await this.simulateDelay()
+    const penalties = getFromStorage<Penalty>(STORAGE_KEYS.PENALTIES, [])
+    return assessmentId ? penalties.filter(p => p.assessmentId === assessmentId) : penalties
+  }
+
+  async getPenalty(id: string): Promise<Penalty | null> {
+    await this.simulateDelay()
+    const penalties = getFromStorage<Penalty>(STORAGE_KEYS.PENALTIES, [])
+    return penalties.find(p => p.id === id) || null
+  }
+
+  async createPenalty(data: Omit<Penalty, "id" | "tenantId" | "createdAt" | "updatedAt">): Promise<Penalty> {
+    await this.simulateDelay()
+    const penalties = getFromStorage<Penalty>(STORAGE_KEYS.PENALTIES, [])
+    const newPenalty: Penalty = {
+      ...data,
+      id: Date.now().toString(),
+      tenantId: "tenant_1",
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    }
+    penalties.push(newPenalty)
+    saveToStorage(STORAGE_KEYS.PENALTIES, penalties)
+    await this.createAuditLog("system", "CREATE", "penalty", newPenalty.id, { penalty: newPenalty })
+    return newPenalty
+  }
+
+  async updatePenalty(id: string, updates: Partial<Penalty>): Promise<Penalty> {
+    await this.simulateDelay()
+    const penalties = getFromStorage<Penalty>(STORAGE_KEYS.PENALTIES, [])
+    const index = penalties.findIndex(p => p.id === id)
+    if (index === -1) throw new Error("Penalty not found")
+    
+    const oldData = { ...penalties[index] }
+    penalties[index] = { ...penalties[index], ...updates, updatedAt: new Date().toISOString() }
+    saveToStorage(STORAGE_KEYS.PENALTIES, penalties)
+    await this.createAuditLog("system", "UPDATE", "penalty", id, { before: oldData, after: penalties[index] })
+    return penalties[index]
+  }
+
+  async deletePenalty(id: string): Promise<void> {
+    await this.simulateDelay()
+    const penalties = getFromStorage<Penalty>(STORAGE_KEYS.PENALTIES, [])
+    const penalty = penalties.find(p => p.id === id)
+    const filtered = penalties.filter(p => p.id !== id)
+    saveToStorage(STORAGE_KEYS.PENALTIES, filtered)
+    if (penalty) {
+      await this.createAuditLog("system", "DELETE", "penalty", id, { penalty })
+    }
+  }
+
+  // TIMELINES CRUD
+  async getTimelines(assessmentId?: string): Promise<Timeline[]> {
+    await this.simulateDelay()
+    const timelines = getFromStorage<Timeline>(STORAGE_KEYS.TIMELINES, [])
+    return assessmentId ? timelines.filter(t => t.assessmentId === assessmentId) : timelines
+  }
+
+  async getTimeline(id: string): Promise<Timeline | null> {
+    await this.simulateDelay()
+    const timelines = getFromStorage<Timeline>(STORAGE_KEYS.TIMELINES, [])
+    return timelines.find(t => t.id === id) || null
+  }
+
+  async createTimeline(data: Omit<Timeline, "id" | "tenantId" | "createdAt" | "updatedAt">): Promise<Timeline> {
+    await this.simulateDelay()
+    const timelines = getFromStorage<Timeline>(STORAGE_KEYS.TIMELINES, [])
+    const newTimeline: Timeline = {
+      ...data,
+      id: Date.now().toString(),
+      tenantId: "tenant_1",
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    }
+    timelines.push(newTimeline)
+    saveToStorage(STORAGE_KEYS.TIMELINES, timelines)
+    await this.createAuditLog("system", "CREATE", "timeline", newTimeline.id, { timeline: newTimeline })
+    return newTimeline
+  }
+
+  async updateTimeline(id: string, updates: Partial<Timeline>): Promise<Timeline> {
+    await this.simulateDelay()
+    const timelines = getFromStorage<Timeline>(STORAGE_KEYS.TIMELINES, [])
+    const index = timelines.findIndex(t => t.id === id)
+    if (index === -1) throw new Error("Timeline not found")
+    
+    const oldData = { ...timelines[index] }
+    timelines[index] = { ...timelines[index], ...updates, updatedAt: new Date().toISOString() }
+    saveToStorage(STORAGE_KEYS.TIMELINES, timelines)
+    await this.createAuditLog("system", "UPDATE", "timeline", id, { before: oldData, after: timelines[index] })
+    return timelines[index]
+  }
+
+  async deleteTimeline(id: string): Promise<void> {
+    await this.simulateDelay()
+    const timelines = getFromStorage<Timeline>(STORAGE_KEYS.TIMELINES, [])
+    const timeline = timelines.find(t => t.id === id)
+    const filtered = timelines.filter(t => t.id !== id)
+    saveToStorage(STORAGE_KEYS.TIMELINES, filtered)
+    if (timeline) {
+      await this.createAuditLog("system", "DELETE", "timeline", id, { timeline })
+    }
+  }
+
+  // ATTESTATIONS CRUD
+  async getAttestations(subjectId?: string): Promise<Attestation[]> {
+    await this.simulateDelay()
+    const attestations = getFromStorage<Attestation>(STORAGE_KEYS.ATTESTATIONS, [])
+    return subjectId ? attestations.filter(a => a.subjectId === subjectId) : attestations
+  }
+
+  async getAttestation(id: string): Promise<Attestation | null> {
+    await this.simulateDelay()
+    const attestations = getFromStorage<Attestation>(STORAGE_KEYS.ATTESTATIONS, [])
+    return attestations.find(a => a.id === id) || null
+  }
+
+  async createAttestation(data: Omit<Attestation, "id" | "tenantId" | "createdAt" | "updatedAt">): Promise<Attestation> {
+    await this.simulateDelay()
+    const attestations = getFromStorage<Attestation>(STORAGE_KEYS.ATTESTATIONS, [])
+    const newAttestation: Attestation = {
+      ...data,
+      id: Date.now().toString(),
+      tenantId: "tenant_1",
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    }
+    attestations.push(newAttestation)
+    saveToStorage(STORAGE_KEYS.ATTESTATIONS, attestations)
+    await this.createAuditLog(data.attestedBy || "system", "ATTEST", "attestation", newAttestation.id, { attestation: newAttestation })
+    return newAttestation
+  }
+
+  async updateAttestation(id: string, updates: Partial<Attestation>): Promise<Attestation> {
+    await this.simulateDelay()
+    const attestations = getFromStorage<Attestation>(STORAGE_KEYS.ATTESTATIONS, [])
+    const index = attestations.findIndex(a => a.id === id)
+    if (index === -1) throw new Error("Attestation not found")
+    
+    const oldData = { ...attestations[index] }
+    attestations[index] = { ...attestations[index], ...updates, updatedAt: new Date().toISOString() }
+    saveToStorage(STORAGE_KEYS.ATTESTATIONS, attestations)
+    await this.createAuditLog("system", "UPDATE", "attestation", id, { before: oldData, after: attestations[index] })
+    return attestations[index]
+  }
+
+  async deleteAttestation(id: string): Promise<void> {
+    await this.simulateDelay()
+    const attestations = getFromStorage<Attestation>(STORAGE_KEYS.ATTESTATIONS, [])
+    const attestation = attestations.find(a => a.id === id)
+    const filtered = attestations.filter(a => a.id !== id)
+    saveToStorage(STORAGE_KEYS.ATTESTATIONS, filtered)
+    if (attestation) {
+      await this.createAuditLog("system", "DELETE", "attestation", id, { attestation })
+    }
+  }
+
+  // CLARIFICATIONS CRUD
+  async getClarifications(assessmentId?: string): Promise<Clarification[]> {
+    await this.simulateDelay()
+    const clarifications = getFromStorage<Clarification>(STORAGE_KEYS.CLARIFICATIONS, [])
+    return assessmentId ? clarifications.filter(c => c.assessmentId === assessmentId) : clarifications
+  }
+
+  async getClarification(id: string): Promise<Clarification | null> {
+    await this.simulateDelay()
+    const clarifications = getFromStorage<Clarification>(STORAGE_KEYS.CLARIFICATIONS, [])
+    return clarifications.find(c => c.id === id) || null
+  }
+
+  async createClarification(data: Omit<Clarification, "id" | "tenantId" | "createdAt" | "updatedAt">): Promise<Clarification> {
+    await this.simulateDelay()
+    const clarifications = getFromStorage<Clarification>(STORAGE_KEYS.CLARIFICATIONS, [])
+    const newClarification: Clarification = {
+      ...data,
+      id: Date.now().toString(),
+      tenantId: "tenant_1",
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    }
+    clarifications.push(newClarification)
+    saveToStorage(STORAGE_KEYS.CLARIFICATIONS, clarifications)
+    await this.createAuditLog("system", "CREATE", "clarification", newClarification.id, { clarification: newClarification })
+    return newClarification
+  }
+
+  async updateClarification(id: string, updates: Partial<Clarification>): Promise<Clarification> {
+    await this.simulateDelay()
+    const clarifications = getFromStorage<Clarification>(STORAGE_KEYS.CLARIFICATIONS, [])
+    const index = clarifications.findIndex(c => c.id === id)
+    if (index === -1) throw new Error("Clarification not found")
+    
+    const oldData = { ...clarifications[index] }
+    clarifications[index] = { ...clarifications[index], ...updates, updatedAt: new Date().toISOString() }
+    saveToStorage(STORAGE_KEYS.CLARIFICATIONS, clarifications)
+    
+    if (updates.status === "Resolved") {
+      await this.createAuditLog(updates.resolvedBy || "system", "RESOLVE", "clarification", id, { before: oldData, after: clarifications[index] })
+    } else {
+      await this.createAuditLog("system", "UPDATE", "clarification", id, { before: oldData, after: clarifications[index] })
+    }
+    return clarifications[index]
+  }
+
+  async deleteClarification(id: string): Promise<void> {
+    await this.simulateDelay()
+    const clarifications = getFromStorage<Clarification>(STORAGE_KEYS.CLARIFICATIONS, [])
+    const clarification = clarifications.find(c => c.id === id)
+    const filtered = clarifications.filter(c => c.id !== id)
+    saveToStorage(STORAGE_KEYS.CLARIFICATIONS, filtered)
+    if (clarification) {
+      await this.createAuditLog("system", "DELETE", "clarification", id, { clarification })
+    }
+  }
+
+  // AUDIT LOGS CRUD
+  async getAuditLogs(filters?: { targetType?: string; targetId?: string; actor?: string }): Promise<AuditLog[]> {
+    await this.simulateDelay()
+    let logs = getFromStorage<AuditLog>(STORAGE_KEYS.AUDIT_LOGS, [])
+    
+    if (filters) {
+      if (filters.targetType) {
+        logs = logs.filter(l => l.targetType === filters.targetType)
+      }
+      if (filters.targetId) {
+        logs = logs.filter(l => l.targetId === filters.targetId)
+      }
+      if (filters.actor) {
+        logs = logs.filter(l => l.actor === filters.actor)
+      }
+    }
+    
+    return logs.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
+  }
+
+  async createAuditLog(
+    actor: string,
+    action: AuditLog["action"],
+    targetType: AuditLog["targetType"],
+    targetId: string,
+    details: Record<string, any>
+  ): Promise<AuditLog> {
+    // No delay for audit logs to avoid performance issues
+    const logs = getFromStorage<AuditLog>(STORAGE_KEYS.AUDIT_LOGS, [])
+    const newLog: AuditLog = {
+      id: Date.now().toString() + Math.random(),
+      tenantId: "tenant_1",
+      actor,
+      action,
+      target: `${targetType}:${targetId}`,
+      targetType,
+      targetId,
+      timestamp: new Date().toISOString(),
+      details,
+    }
+    logs.push(newLog)
+    saveToStorage(STORAGE_KEYS.AUDIT_LOGS, logs)
+    return newLog
   }
 
   // Helper

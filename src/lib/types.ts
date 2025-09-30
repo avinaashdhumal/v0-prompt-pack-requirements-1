@@ -213,6 +213,27 @@ export interface Requirement {
   testProcedures: string[]
   refs: DocumentReference[]
   status?: "KNOWN" | "UNCERTAIN"
+  tenantId: string
+  createdAt: string
+  updatedAt: string
+}
+
+export interface Control {
+  id: string
+  assessmentId: string
+  family: "Access Control" | "Data Protection" | "Governance" | "Incident Response" | "Third Party" | "Business Continuity"
+  controlId: string
+  title: string
+  description: string
+  implementationStatus: "Implemented" | "Partial" | "Not Implemented" | "Not Applicable"
+  effectiveness: "Effective" | "Needs Improvement" | "Ineffective"
+  testDate?: string
+  tester?: string
+  notes?: string
+  refs: DocumentReference[]
+  tenantId: string
+  createdAt: string
+  updatedAt: string
 }
 
 export interface Obligation {
@@ -221,6 +242,13 @@ export interface Obligation {
   legalText: string
   jurisdiction: string
   refs: DocumentReference[]
+  tenantId: string
+  category: "Compliance" | "Reporting" | "Data Protection" | "Security" | "Other"
+  dueDate?: string
+  status: "Pending" | "In Progress" | "Completed"
+  owner?: string
+  createdAt: string
+  updatedAt: string
 }
 
 export interface Penalty {
@@ -231,6 +259,11 @@ export interface Penalty {
   maxAmount?: string
   conditions: string
   refs: DocumentReference[]
+  tenantId: string
+  severity: "Low" | "Medium" | "High" | "Critical"
+  applicableTo: string
+  createdAt: string
+  updatedAt: string
 }
 
 export interface Timeline {
@@ -240,17 +273,46 @@ export interface Timeline {
   deadline: string
   trigger: string
   refs: DocumentReference[]
+  tenantId: string
+  status: "Upcoming" | "Due Soon" | "Overdue" | "Completed"
+  owner?: string
+  reminderSet: boolean
+  createdAt: string
+  updatedAt: string
 }
 
 // Attestation & Evidence
 export interface Attestation {
   id: string
   subjectId: string // finding_id or requirement_id
-  subjectType: "finding" | "requirement"
+  subjectType: "finding" | "requirement" | "control" | "obligation"
   status: "Have" | "Partial" | "No"
   evidenceUri?: string
+  evidenceDescription?: string
   owner?: string
   notes?: string
+  attestedBy?: string
+  attestedAt?: string
+  tenantId: string
+  createdAt: string
+  updatedAt: string
+}
+
+export interface Clarification {
+  id: string
+  assessmentId: string
+  subjectId: string
+  subjectType: "requirement" | "finding" | "control" | "obligation"
+  question: string
+  context: string
+  status: "Open" | "Under Review" | "Resolved" | "Closed"
+  priority: "Low" | "Medium" | "High"
+  resolution?: string
+  resolvedBy?: string
+  resolvedAt?: string
+  assignedTo?: string
+  refs: DocumentReference[]
+  tenantId: string
   createdAt: string
   updatedAt: string
 }
@@ -287,9 +349,15 @@ export interface AuditLog {
   id: string
   tenantId: string
   actor: string
-  action: string
+  actorEmail?: string
+  action: "CREATE" | "UPDATE" | "DELETE" | "VIEW" | "EXPORT" | "IMPORT" | "RUN_ASSESSMENT" | "ATTEST" | "RESOLVE"
   target: string
+  targetType: "document" | "assessment" | "requirement" | "finding" | "remediation" | "attestation" | "clarification"
+  targetId: string
   timestamp: string
+  changes?: Record<string, any>
+  ipAddress?: string
+  userAgent?: string
   details: Record<string, any>
 }
 
