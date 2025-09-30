@@ -20,6 +20,7 @@ import { Upload, Plus, Sparkles, FileText, CheckCircle2, Clock, Files } from "lu
 import { useDocuments } from "../../lib/hooks/useDocuments"
 import { DocumentUpload } from "../../components/documents/DocumentUpload"
 import { DocumentList } from "../../components/documents/DocumentList"
+import { ComplianceTabsManager } from "../../components/compliance/ComplianceTabsManager"
 
 export default function DocumentsPage() {
   const { documents, loading, uploadDocument, isUploading } = useDocuments()
@@ -179,7 +180,7 @@ export default function DocumentsPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.4 }}
         >
-          <Card sx={{ borderRadius: 3, border: "1px solid", borderColor: "divider" }}>
+          <Card sx={{ borderRadius: 3, border: "1px solid", borderColor: "divider", mb: 4 }}>
             <CardContent sx={{ p: 4 }}>
               <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", mb: 3 }}>
                 <Box>
@@ -204,6 +205,27 @@ export default function DocumentsPage() {
                 </Button>
               </Box>
               <DocumentList documents={documents} loading={loading} />
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        {/* Compliance Management Tabs */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.6 }}
+        >
+          <Card sx={{ borderRadius: 3, border: "1px solid", borderColor: "divider" }}>
+            <CardContent sx={{ p: 4 }}>
+              <Box sx={{ mb: 2 }}>
+                <Typography variant="h6" sx={{ fontWeight: 600, mb: 0.5 }}>
+                  Compliance Management
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Manage requirements, obligations, penalties, timelines, attestations, and more
+                </Typography>
+              </Box>
+              <ComplianceTabsManager />
             </CardContent>
           </Card>
         </motion.div>
