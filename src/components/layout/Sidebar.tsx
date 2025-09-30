@@ -48,15 +48,15 @@ export default function Sidebar() {
         "& .MuiDrawer-paper": {
           width: drawerWidth,
           boxSizing: "border-box",
-          backgroundColor: "primary.main",
-          color: "primary.contrastText",
+          background: "linear-gradient(135deg, rgba(69, 56, 202, 0.95) 0%, rgba(45, 35, 128, 0.95) 50%, rgba(16, 185, 129, 0.95) 100%)",
+          color: "white",
         },
       }}
     >
       <Toolbar>
         <Box display="flex" alignItems="center">
-          <Assessment sx={{ mr: 1, color: "primary.contrastText" }} />
-          <Typography variant="h6" noWrap component="div" sx={{ color: "primary.contrastText" }}>
+          <Assessment sx={{ mr: 1, color: "white" }} />
+          <Typography variant="h6" noWrap component="div" sx={{ color: "white" }}>
             ComplianceHQ
           </Typography>
         </Box>
@@ -66,12 +66,12 @@ export default function Sidebar() {
       {user && (
         <Box sx={{ p: 2 }}>
           <Box display="flex" alignItems="center" gap={2} mb={2}>
-            <Avatar sx={{ width: 32, height: 32, bgcolor: "primary.contrastText", color: "primary.main" }}>
+            <Avatar sx={{ width: 32, height: 32, bgcolor: "white", color: "primary.main" }}>
               {user.firstName[0]}
               {user.lastName[0]}
             </Avatar>
             <Box>
-              <Typography variant="body2" fontWeight="medium" sx={{ color: "primary.contrastText" }}>
+              <Typography variant="body2" fontWeight="medium" sx={{ color: "white" }}>
                 {user.firstName} {user.lastName}
               </Typography>
               <Typography variant="caption" sx={{ color: "rgba(255, 255, 255, 0.7)" }}>
@@ -90,13 +90,13 @@ export default function Sidebar() {
               selected={pathname === item.path}
               onClick={() => router.push(item.path)}
               sx={{
-                color: "primary.contrastText",
+                color: "white",
                 "&:hover": {
                   backgroundColor: "rgba(255, 255, 255, 0.08)",
                 },
                 "&.Mui-selected": {
                   backgroundColor: "rgba(255, 255, 255, 0.16)",
-                  color: "primary.contrastText",
+                  color: "white",
                   fontWeight: 600,
                   "&:hover": {
                     backgroundColor: "rgba(255, 255, 255, 0.24)",
@@ -125,10 +125,10 @@ export default function Sidebar() {
           startIcon={<Logout />}
           onClick={handleLogout}
           sx={{
-            borderColor: "primary.contrastText",
-            color: "primary.contrastText",
+            borderColor: "white",
+            color: "white",
             "&:hover": {
-              borderColor: "primary.contrastText",
+              borderColor: "white",
               backgroundColor: "rgba(255, 255, 255, 0.08)",
             },
           }}

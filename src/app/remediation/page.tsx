@@ -249,8 +249,10 @@ export default function RemediationPage() {
                 py: 1.5,
                 borderRadius: 2,
                 fontWeight: 600,
+                background: "linear-gradient(135deg, rgba(69, 56, 202, 1) 0%, rgba(16, 185, 129, 1) 100%)",
                 boxShadow: "0 4px 12px rgba(69, 56, 202, 0.25)",
                 "&:hover": {
+                  background: "linear-gradient(135deg, rgba(59, 46, 172, 1) 0%, rgba(14, 165, 115, 1) 100%)",
                   boxShadow: "0 6px 20px rgba(69, 56, 202, 0.35)",
                 },
               }}
