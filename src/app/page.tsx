@@ -6,6 +6,7 @@ import {
   Upload, 
   FileText, 
   TrendingUp, 
+  Check, 
   ArrowRight,
   Sparkles,
   Brain,
@@ -18,48 +19,8 @@ import {
   Clock
 } from "lucide-react"
 import Link from "next/link"
-import { useEffect, useState } from "react"
-import { 
-  Box, 
-  Container, 
-  Typography, 
-  Button, 
-  Grid, 
-  Card, 
-  CardContent, 
-  Chip,
-  AppBar,
-  Toolbar,
-  CircularProgress,
-  Stack
-} from "@mui/material"
 
 export default function HomePage() {
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  if (!mounted) {
-    return (
-      <Box 
-        sx={{ 
-          minHeight: "100vh", 
-          display: "flex", 
-          alignItems: "center", 
-          justifyContent: "center",
-          bgcolor: "background.default"
-        }}
-      >
-        <Box sx={{ textAlign: "center" }}>
-          <CircularProgress size={40} sx={{ mb: 2 }} />
-          <Typography color="text.secondary">Loading...</Typography>
-        </Box>
-      </Box>
-    )
-  }
-
   const fadeInUp = {
     initial: { opacity: 0, y: 20 },
     animate: { opacity: 1, y: 0 },
@@ -75,572 +36,400 @@ export default function HomePage() {
   }
 
   return (
-    <Box sx={{ minHeight: "100vh", bgcolor: "background.default" }}>
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
       {/* Navigation */}
-      <AppBar 
-        position="fixed" 
-        elevation={0}
-        sx={{ 
-          bgcolor: "rgba(255, 255, 255, 0.8)", 
-          backdropFilter: "blur(20px)",
-          borderBottom: "1px solid",
-          borderColor: "divider"
-        }}
-      >
-        <Container maxWidth="xl">
-          <Toolbar sx={{ py: 1 }}>
-            <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, flexGrow: 1 }}>
-              <Box sx={{ position: "relative" }}>
-                <Shield size={32} color="#212121" strokeWidth={2.5} />
-                <Sparkles size={16} style={{ position: "absolute", top: -4, right: -4 }} />
-              </Box>
-              <Typography 
-                variant="h6" 
-                sx={{ 
-                  fontWeight: 700,
-                  background: "linear-gradient(90deg, #212121, #757575)",
-                  backgroundClip: "text",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent"
-                }}
-              >
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border/50">
+        <div className="max-w-7xl mx-auto px-6 py-4">
+          <div className="flex items-center justify-between">
+            <motion.div 
+              className="flex items-center gap-3"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <div className="relative">
+                <Shield className="h-8 w-8 text-primary" strokeWidth={2.5} />
+                <Sparkles className="h-4 w-4 text-accent absolute -top-1 -right-1" />
+              </div>
+              <span className="text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
                 Compliance HealthCheck
-              </Typography>
-            </Box>
-            <Stack direction="row" spacing={2}>
-              <Button 
-                component={Link} 
+              </span>
+            </motion.div>
+            <motion.div 
+              className="flex items-center gap-4"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <Link 
                 href="/login" 
-                sx={{ color: "text.secondary" }}
+                className="text-sm font-medium text-foreground/70 hover:text-foreground transition-colors"
               >
                 Sign In
-              </Button>
-              <Button 
-                component={Link} 
+              </Link>
+              <Link 
+              style = {{
+                paddingLeft: "12px",
+                paddingRight: "12px", 
+                paddingTop: "6px",
+                paddingBottom: "6px",
+                borderRadius: "8px",
+                fontWeight: 600,
+                background: "linear-gradient(135deg, rgba(69, 56, 202, 1) 0%, rgba(16, 185, 129, 1) 100%)",
+                boxShadow: "0 4px 12px rgba(69, 56, 202, 0.25)",
+              }}
                 href="/dashboard" 
-                variant="contained"
-                sx={{
-                  bgcolor: "primary.main",
-                  color: "primary.contrastText",
-                  "&:hover": {
-                    bgcolor: "primary.dark",
-                    boxShadow: "0 4px 12px rgba(33, 33, 33, 0.25)"
-                  }
-                }}
+                className="px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:bg-primary/90 transition-all hover:shadow-lg hover:shadow-primary/25"
               >
                 Get Started
-              </Button>
-            </Stack>
-          </Toolbar>
-        </Container>
-      </AppBar>
+              </Link>
+            </motion.div>
+          </div>
+        </div>
+      </nav>
 
       {/* Hero Section */}
-      <Box sx={{ pt: 20, pb: 10 }}>
-        <Container maxWidth="lg">
-          <Box sx={{ textAlign: "center" }}>
-            <motion.div {...fadeInUp}>
-              <Chip 
-                icon={<Sparkles size={16} />}
-                label="AI-Powered Compliance Intelligence"
-                sx={{ 
-                  mb: 3,
-                  bgcolor: "rgba(117, 117, 117, 0.1)",
-                  border: "1px solid rgba(117, 117, 117, 0.2)",
-                  fontWeight: 600
-                }}
-              />
+      <section className="pt-32 pb-20 px-6">
+        <div className="max-w-7xl mx-auto">
+          <motion.div 
+            className="text-center max-w-4xl mx-auto"
+            initial="initial"
+            animate="animate"
+            variants={staggerChildren}
+          >
+            <motion.div variants={fadeInUp} className="inline-flex items-center gap-2 px-4 py-2 bg-accent/10 border border-accent/20 rounded-full mb-6">
+              <Sparkles className="h-4 w-4 text-accent" />
+              <span className="text-sm font-medium text-accent">AI-Powered Compliance Intelligence</span>
             </motion.div>
             
-            <motion.div {...fadeInUp}>
-              <Typography 
-                variant="h1" 
-                sx={{ 
-                  fontSize: { xs: "2.5rem", md: "4rem", lg: "4.5rem" },
-                  fontWeight: 700,
-                  mb: 3,
-                  lineHeight: 1.1
-                }}
-              >
-                Transform Compliance
-                <br />
-                <Box 
-                  component="span" 
-                  sx={{ 
-                    background: "linear-gradient(90deg, #212121, #757575, #212121)",
-                    backgroundClip: "text",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent"
-                  }}
-                >
-                  From Burden to Advantage
-                </Box>
-              </Typography>
-            </motion.div>
+            <motion.h1 
+              variants={fadeInUp}
+              className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight"
+            >
+              Transform Compliance
+              <br />
+              <span className="bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
+                From Burden to Advantage
+              </span>
+            </motion.h1>
             
-            <motion.div {...fadeInUp}>
-              <Typography 
-                variant="h6" 
-                color="text.secondary" 
-                sx={{ mb: 4, maxWidth: "800px", mx: "auto", fontWeight: 400 }}
-              >
-                Upload regulations, contracts, or policies. Our AI instantly extracts requirements, identifies gaps, 
-                and delivers a prioritized remediation roadmap—all with clause-level citations.
-              </Typography>
-            </motion.div>
+            <motion.p 
+              variants={fadeInUp}
+              className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed"
+            >
+              Upload regulations, contracts, or policies. Our AI instantly extracts requirements, identifies gaps, 
+              and delivers a prioritized remediation roadmap—all with clause-level citations.
+            </motion.p>
             
-            <motion.div {...fadeInUp}>
-              <Stack 
-                direction={{ xs: "column", sm: "row" }} 
-                spacing={2} 
-                justifyContent="center"
-                sx={{ mb: 6 }}
+            <motion.div 
+              variants={fadeInUp}
+              className="flex flex-col sm:flex-row gap-4 justify-center items-center"
+            >
+              <Link 
+               style = {{
+              
+                fontWeight: 600,
+                background: "linear-gradient(135deg, rgba(69, 56, 202, 1) 0%, rgba(16, 185, 129, 1) 100%)",
+                boxShadow: "0 4px 12px rgba(69, 56, 202, 0.25)",
+              }}
+                href="/documents" 
+                className="group px-8 py-4 bg-primary text-primary-foreground rounded-xl text-base font-semibold hover:bg-primary/90 transition-all hover:shadow-2xl hover:shadow-primary/30 flex items-center gap-2 w-full sm:w-auto justify-center"
               >
-                <Button 
-                  component={Link} 
-                  href="/documents"
-                  variant="contained"
-                  size="large"
-                  startIcon={<Upload size={20} />}
-                  endIcon={<ArrowRight size={20} />}
-                  sx={{
-                    px: 4,
-                    py: 1.5,
-                    bgcolor: "primary.main",
-                    color: "primary.contrastText",
-                    "&:hover": {
-                      bgcolor: "primary.dark",
-                      boxShadow: "0 8px 24px rgba(33, 33, 33, 0.3)"
-                    }
-                  }}
-                >
-                  Start Free Assessment
-                </Button>
-                <Button 
-                  variant="outlined"
-                  size="large"
-                  sx={{
-                    px: 4,
-                    py: 1.5,
-                    borderWidth: 2,
-                    "&:hover": {
-                      borderWidth: 2,
-                      borderColor: "primary.main"
-                    }
-                  }}
-                >
-                  Watch Demo
-                </Button>
-              </Stack>
+                <Upload className="h-5 w-5" />
+                Start Free Assessment
+                <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
+              </Link>
+              <button className="px-8 py-4 bg-card border-2 border-border text-foreground rounded-xl text-base font-semibold hover:border-primary/50 hover:bg-card/80 transition-all w-full sm:w-auto">
+                Watch Demo
+              </button>
             </motion.div>
 
-            <motion.div {...fadeInUp}>
-              <Stack 
-                direction={{ xs: "column", sm: "row" }} 
-                spacing={4} 
-                justifyContent="center"
-                sx={{ color: "text.secondary" }}
-              >
-                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                  <CheckCircle2 size={20} color="#16a34a" />
-                  <Typography variant="body2">Free to Start</Typography>
-                </Box>
-                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                  <Lock size={20} color="#16a34a" />
-                  <Typography variant="body2">Enterprise Security</Typography>
-                </Box>
-                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                  <Clock size={20} color="#16a34a" />
-                  <Typography variant="body2">Results in Minutes</Typography>
-                </Box>
-              </Stack>
+            <motion.div 
+              variants={fadeInUp}
+              className="mt-12 flex items-center justify-center gap-8 text-sm text-muted-foreground"
+            >
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="h-5 w-5 text-success" />
+                <span>Free to Start</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Lock className="h-5 w-5 text-success" />
+                <span>Enterprise Security</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Clock className="h-5 w-5 text-success" />
+                <span>Results in Minutes</span>
+              </div>
             </motion.div>
-          </Box>
-        </Container>
-      </Box>
+          </motion.div>
+        </div>
+      </section>
 
       {/* How It Works */}
-      <Box sx={{ py: 10, bgcolor: "rgba(245, 245, 245, 0.3)" }}>
-        <Container maxWidth="xl">
-          <Box sx={{ textAlign: "center", mb: 8 }}>
-            <Typography variant="h2" sx={{ mb: 2 }}>
+      <section className="py-20 px-6 bg-gradient-to-b from-transparent to-muted/20">
+        <div className="max-w-7xl mx-auto">
+          <motion.div 
+            className="text-center mb-16"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">
               From Document to Action in{" "}
-              <Box component="span" color="primary.main">4 Simple Steps</Box>
-            </Typography>
-            <Typography variant="h6" color="text.secondary" sx={{ fontWeight: 400 }}>
+              <span className="text-primary">4 Simple Steps</span>
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               Our AI-powered engine handles the heavy lifting so you can focus on what matters
-            </Typography>
-          </Box>
+            </p>
+          </motion.div>
 
-          <Grid container spacing={3}>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
               {
                 icon: Upload,
                 title: "Upload Documents",
                 description: "Drop your PDFs, regulations, contracts, or policies. We support OCR and multi-language processing.",
-                color: "#2563eb"
+                color: "text-chart-1"
               },
               {
                 icon: Brain,
                 title: "AI Analysis",
                 description: "Advanced LLM extracts requirements, risks, obligations, penalties, and timelines with precise citations.",
-                color: "#10b981"
+                color: "text-chart-2"
               },
               {
                 icon: FileCheck,
                 title: "Attest Controls",
                 description: "Mark requirements as Have/Partial/Don't Have. Add evidence and notes for each control.",
-                color: "#f59e0b"
+                color: "text-chart-4"
               },
               {
                 icon: BarChart3,
                 title: "Get Roadmap",
                 description: "Receive compliance scores, risk heatmaps, and prioritized remediation plans with effort estimates.",
-                color: "#8b5cf6"
+                color: "text-chart-5"
               }
-            ].map((step, index) => {
-              const Icon = step.icon
-              return (
-                <Grid item xs={12} sm={6} lg={3} key={step.title}>
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                  >
-                    <Card 
-                      sx={{ 
-                        height: "100%",
-                        position: "relative",
-                        transition: "all 0.3s",
-                        "&:hover": {
-                          borderColor: "primary.main",
-                          boxShadow: "0 8px 24px rgba(33, 33, 33, 0.1)"
-                        }
-                      }}
-                    >
-                      <CardContent sx={{ p: 3 }}>
-                        <Box 
-                          sx={{ 
-                            display: "inline-flex", 
-                            p: 1.5, 
-                            bgcolor: "rgba(245, 245, 245, 1)", 
-                            borderRadius: 2,
-                            mb: 2
-                          }}
-                        >
-                          <Icon size={24} color={step.color} />
-                        </Box>
-                        <Typography 
-                          variant="h1" 
-                          sx={{ 
-                            position: "absolute", 
-                            top: 16, 
-                            right: 16, 
-                            fontSize: "3rem",
-                            color: "rgba(33, 33, 33, 0.05)",
-                            fontWeight: 700
-                          }}
-                        >
-                          {index + 1}
-                        </Typography>
-                        <Typography variant="h6" sx={{ mb: 1, fontWeight: 700 }}>
-                          {step.title}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                          {step.description}
-                        </Typography>
-                      </CardContent>
-                    </Card>
-                  </motion.div>
-                </Grid>
-              )
-            })}
-          </Grid>
-        </Container>
-      </Box>
+            ].map((step, index) => (
+              <motion.div
+                key={step.title}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="relative group"
+              >
+                <div className="bg-card border border-border rounded-2xl p-6 h-full hover:border-primary/50 transition-all hover:shadow-xl hover:shadow-primary/10">
+                  <div className={`inline-flex p-3 bg-muted rounded-xl mb-4 ${step.color}`}>
+                    <step.icon className="h-6 w-6" />
+                  </div>
+                  <div className="absolute top-4 right-4 text-5xl font-bold text-muted/10">
+                    {index + 1}
+                  </div>
+                  <h3 className="text-xl font-bold mb-2">{step.title}</h3>
+                  <p className="text-muted-foreground leading-relaxed">{step.description}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* Key Features */}
-      <Box sx={{ py: 10 }}>
-        <Container maxWidth="xl">
-          <Box sx={{ textAlign: "center", mb: 8 }}>
-            <Typography variant="h2" sx={{ mb: 2 }}>
+      <section className="py-20 px-6">
+        <div className="max-w-7xl mx-auto">
+          <motion.div 
+            className="text-center mb-16"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">
               Built for{" "}
-              <Box 
-                component="span" 
-                sx={{ 
-                  background: "linear-gradient(90deg, #212121, #757575)",
-                  backgroundClip: "text",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent"
-                }}
-              >
+              <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
                 Regulated Enterprises
-              </Box>
-            </Typography>
-            <Typography variant="h6" color="text.secondary" sx={{ fontWeight: 400 }}>
+              </span>
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               Enterprise-grade capabilities designed for BFSI, healthcare, and critical infrastructure
-            </Typography>
-          </Box>
+            </p>
+          </motion.div>
 
-          <Grid container spacing={4}>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
               {
                 icon: Shield,
                 title: "Pre-Built Prompt Packs",
                 description: "Ready-to-use templates for PCI DSS, ISO 27001, GDPR, AML/KYC, SOX, Basel III, and more.",
-                color: "#2563eb"
+                gradient: "from-chart-1/20 to-chart-1/5"
               },
               {
                 icon: FileText,
                 title: "Clause-Level Citations",
                 description: "Every finding includes document name, page number, and clause reference for audit trails.",
-                color: "#10b981"
+                gradient: "from-chart-2/20 to-chart-2/5"
               },
               {
                 icon: AlertTriangle,
                 title: "Risk Scoring Engine",
                 description: "Impact × Likelihood analysis with control family weighting and residual risk calculation.",
-                color: "#f59e0b"
+                gradient: "from-chart-3/20 to-chart-3/5"
               },
               {
                 icon: Lock,
                 title: "Bank-Grade Security",
                 description: "AES-256 encryption, tenant isolation, audit logs, and region-locked processing available.",
-                color: "#10b981"
+                gradient: "from-chart-2/20 to-chart-2/5"
               },
               {
                 icon: Zap,
                 title: "Automated Remediation",
                 description: "Prioritized action plans with effort estimates, ownership suggestions, and dependency tracking.",
-                color: "#f59e0b"
+                gradient: "from-chart-4/20 to-chart-4/5"
               },
               {
                 icon: TrendingUp,
                 title: "Compliance Trends",
                 description: "Track scores over time, compare assessments, and demonstrate continuous improvement.",
-                color: "#8b5cf6"
+                gradient: "from-chart-5/20 to-chart-5/5"
               }
-            ].map((feature, index) => {
-              const Icon = feature.icon
-              return (
-                <Grid item xs={12} sm={6} lg={4} key={feature.title}>
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                  >
-                    <Card 
-                      sx={{ 
-                        height: "100%",
-                        background: `linear-gradient(135deg, ${feature.color}15 0%, ${feature.color}05 100%)`,
-                        transition: "all 0.3s",
-                        "&:hover": {
-                          borderColor: "primary.main",
-                          boxShadow: "0 8px 24px rgba(33, 33, 33, 0.15)"
-                        }
-                      }}
-                    >
-                      <CardContent sx={{ p: 4 }}>
-                        <Box 
-                          sx={{ 
-                            display: "inline-flex", 
-                            p: 1.5, 
-                            bgcolor: "background.paper",
-                            border: "1px solid",
-                            borderColor: "divider",
-                            borderRadius: 2,
-                            mb: 2
-                          }}
-                        >
-                          <Icon size={24} color={feature.color} />
-                        </Box>
-                        <Typography variant="h6" sx={{ mb: 1.5, fontWeight: 700 }}>
-                          {feature.title}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                          {feature.description}
-                        </Typography>
-                      </CardContent>
-                    </Card>
-                  </motion.div>
-                </Grid>
-              )
-            })}
-          </Grid>
-        </Container>
-      </Box>
+            ].map((feature, index) => (
+              <motion.div
+                key={feature.title}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="group"
+              >
+                <div className={`bg-gradient-to-br ${feature.gradient} border border-border rounded-2xl p-8 h-full hover:border-primary/50 transition-all hover:shadow-xl`}>
+                  <div className="inline-flex p-3 bg-card border border-border rounded-xl mb-4 group-hover:border-primary/50 transition-colors">
+                    <feature.icon className="h-6 w-6 text-primary" />
+                  </div>
+                  <h3 className="text-xl font-bold mb-3">{feature.title}</h3>
+                  <p className="text-muted-foreground leading-relaxed">{feature.description}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* Supported Frameworks */}
-      <Box sx={{ py: 10, bgcolor: "rgba(245, 245, 245, 0.3)" }}>
-        <Container maxWidth="lg">
-          <Box sx={{ textAlign: "center", mb: 6 }}>
-            <Typography variant="h2" sx={{ mb: 2 }}>
+      <section className="py-20 px-6 bg-gradient-to-b from-muted/20 to-transparent">
+        <div className="max-w-7xl mx-auto">
+          <motion.div 
+            className="text-center mb-12"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
               Pre-Tuned for Leading Frameworks
-            </Typography>
-            <Typography variant="h6" color="text.secondary" sx={{ fontWeight: 400 }}>
+            </h2>
+            <p className="text-lg text-muted-foreground">
               Industry-specific prompt packs and control mappings ready out of the box
-            </Typography>
-          </Box>
+            </p>
+          </motion.div>
 
-          <Card>
-            <CardContent sx={{ p: 4 }}>
-              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1.5, justifyContent: "center" }}>
-                {[
-                  { name: "PCI DSS", category: "Payment" },
-                  { name: "ISO 27001", category: "InfoSec" },
-                  { name: "SOX", category: "Financial" },
-                  { name: "GDPR", category: "Privacy" },
-                  { name: "AML/KYC", category: "Banking" },
-                  { name: "Basel III", category: "Banking" },
-                  { name: "MiFID II", category: "Financial" },
-                  { name: "CCPA", category: "Privacy" },
-                  { name: "HIPAA", category: "Healthcare" },
-                  { name: "NIST CSF", category: "InfoSec" },
-                  { name: "FedRAMP", category: "Government" },
-                  { name: "AI Governance", category: "Emerging" }
-                ].map((framework) => (
-                  <Card 
-                    key={framework.name}
-                    sx={{ 
-                      cursor: "pointer",
-                      transition: "all 0.3s",
-                      "&:hover": {
-                        borderColor: "primary.main",
-                        bgcolor: "rgba(33, 33, 33, 0.05)"
-                      }
-                    }}
-                  >
-                    <CardContent sx={{ p: 2, textAlign: "center" }}>
-                      <Typography variant="body2" sx={{ fontWeight: 600, mb: 0.5 }}>
-                        {framework.name}
-                      </Typography>
-                      <Typography variant="caption" color="text.secondary">
-                        {framework.category}
-                      </Typography>
-                    </CardContent>
-                  </Card>
-                ))}
-              </Box>
-            </CardContent>
-          </Card>
-        </Container>
-      </Box>
+          <motion.div 
+            className="bg-card border border-border rounded-2xl p-8"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
+            <div className="flex flex-wrap gap-3 justify-center">
+              {[
+                { name: "PCI DSS", category: "Payment" },
+                { name: "ISO 27001", category: "InfoSec" },
+                { name: "SOX", category: "Financial" },
+                { name: "GDPR", category: "Privacy" },
+                { name: "AML/KYC", category: "Banking" },
+                { name: "Basel III", category: "Banking" },
+                { name: "MiFID II", category: "Financial" },
+                { name: "CCPA", category: "Privacy" },
+                { name: "HIPAA", category: "Healthcare" },
+                { name: "NIST CSF", category: "InfoSec" },
+                { name: "FedRAMP", category: "Government" },
+                { name: "AI Governance", category: "Emerging" }
+              ].map((framework) => (
+                <div
+                  key={framework.name}
+                  className="group px-4 py-2 bg-muted border border-border rounded-lg hover:border-primary/50 hover:bg-primary/5 transition-all cursor-pointer"
+                >
+                  <div className="flex flex-col items-center gap-1">
+                    <span className="text-sm font-semibold">{framework.name}</span>
+                    <span className="text-xs text-muted-foreground">{framework.category}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      </section>
 
       {/* CTA Section */}
-      <Box sx={{ py: 10 }}>
-        <Container maxWidth="md">
-          <Card 
-            sx={{ 
-              background: "linear-gradient(135deg, #212121 0%, #424242 100%)",
-              color: "white",
-              overflow: "hidden",
-              position: "relative"
-            }}
+      <section className="py-20 px-6">
+        <div className="max-w-5xl mx-auto">
+          <motion.div 
+            className="relative overflow-hidden bg-gradient-to-br from-primary via-primary to-accent rounded-3xl p-12 text-center"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
           >
-            <CardContent sx={{ p: { xs: 4, md: 8 }, textAlign: "center", position: "relative", zIndex: 1 }}>
-              <Typography variant="h2" sx={{ color: "white", mb: 2 }}>
+            <div className="absolute inset-0 bg-grid-white/10" />
+            <div className="relative z-10">
+              <h2 className="text-4xl md:text-5xl font-bold text-primary-foreground mb-4">
                 Ready to Accelerate Compliance?
-              </Typography>
-              <Typography variant="h6" sx={{ color: "rgba(255,255,255,0.9)", mb: 4, fontWeight: 400 }}>
+              </h2>
+              <p className="text-xl text-primary-foreground/90 mb-8 max-w-2xl mx-auto">
                 Join leading enterprises using AI to transform regulatory compliance from reactive to proactive
-              </Typography>
-              <Stack 
-                direction={{ xs: "column", sm: "row" }} 
-                spacing={2} 
-                justifyContent="center"
-              >
-                <Button 
-                  component={Link} 
-                  href="/register"
-                  variant="contained"
-                  size="large"
-                  endIcon={<ArrowRight size={20} />}
-                  sx={{
-                    px: 4,
-                    py: 1.5,
-                    bgcolor: "white",
-                    color: "#212121",
-                    "&:hover": {
-                      bgcolor: "rgba(255,255,255,0.9)",
-                      boxShadow: "0 8px 24px rgba(255, 255, 255, 0.3)"
-                    }
-                  }}
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link 
+              
+                  href="/register" 
+                  className="group px-8 py-4 bg-background text-foreground rounded-xl text-base font-semibold hover:bg-background/90 transition-all hover:shadow-2xl flex items-center gap-2 justify-center"
                 >
                   Start Free Assessment
-                </Button>
-                <Button 
-                  component={Link} 
-                  href="/dashboard"
-                  variant="outlined"
-                  size="large"
-                  sx={{
-                    px: 4,
-                    py: 1.5,
-                    borderWidth: 2,
-                    borderColor: "rgba(255,255,255,0.3)",
-                    color: "white",
-                    "&:hover": {
-                      borderWidth: 2,
-                      borderColor: "rgba(255,255,255,0.5)",
-                      bgcolor: "rgba(255,255,255,0.1)"
-                    }
-                  }}
+                  <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                </Link>
+                <Link 
+                  href="/dashboard" 
+                  className="px-8 py-4 border-2 border-primary-foreground/30 text-primary-foreground rounded-xl text-base font-semibold hover:border-primary-foreground/50 hover:bg-primary-foreground/10 transition-all"
                 >
                   View Dashboard
-                </Button>
-              </Stack>
-            </CardContent>
-          </Card>
-        </Container>
-      </Box>
+                </Link>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
 
       {/* Footer */}
-      <Box 
-        sx={{ 
-          borderTop: "1px solid",
-          borderColor: "divider",
-          py: 6,
-          bgcolor: "rgba(245, 245, 245, 0.3)"
-        }}
-      >
-        <Container maxWidth="xl">
-          <Stack 
-            direction={{ xs: "column", md: "row" }} 
-            justifyContent="space-between" 
-            alignItems="center" 
-            spacing={3}
-          >
-            <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
-              <Shield size={24} color="#212121" />
-              <Typography variant="h6" sx={{ fontWeight: 700 }}>
-                Compliance HealthCheck
-              </Typography>
-            </Box>
-            <Stack 
-              direction="row" 
-              spacing={3} 
-              alignItems="center"
-              sx={{ fontSize: "0.875rem", color: "text.secondary" }}
-            >
-              <Typography variant="body2">© 2025 All rights reserved</Typography>
-              <Typography variant="body2">•</Typography>
-              <Link href="#" style={{ color: "inherit", textDecoration: "none" }}>
-                <Typography variant="body2" sx={{ "&:hover": { color: "text.primary" } }}>Privacy</Typography>
-              </Link>
-              <Typography variant="body2">•</Typography>
-              <Link href="#" style={{ color: "inherit", textDecoration: "none" }}>
-                <Typography variant="body2" sx={{ "&:hover": { color: "text.primary" } }}>Terms</Typography>
-              </Link>
-              <Typography variant="body2">•</Typography>
-              <Link href="#" style={{ color: "inherit", textDecoration: "none" }}>
-                <Typography variant="body2" sx={{ "&:hover": { color: "text.primary" } }}>Contact</Typography>
-              </Link>
-            </Stack>
-          </Stack>
-        </Container>
-      </Box>
-    </Box>
+      <footer className="border-t border-border py-12 px-6 bg-muted/20">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="flex items-center gap-3">
+              <Shield className="h-6 w-6 text-primary" />
+              <span className="text-lg font-bold">Compliance HealthCheck</span>
+            </div>
+            <div className="flex items-center gap-8 text-sm text-muted-foreground">
+              <span>© 2025 All rights reserved</span>
+              <span>•</span>
+              <Link href="#" className="hover:text-foreground transition-colors">Privacy</Link>
+              <span>•</span>
+              <Link href="#" className="hover:text-foreground transition-colors">Terms</Link>
+              <span>•</span>
+              <Link href="#" className="hover:text-foreground transition-colors">Contact</Link>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
   )
 }
